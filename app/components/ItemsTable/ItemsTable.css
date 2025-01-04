@@ -1,0 +1,127 @@
+/* Основные стили таблицы */
+.table {
+    overflow-y: scroll;
+    max-height: 700px;
+    min-width: 100%;
+}
+
+.table-body {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 20px;
+    border: 1px solid #c4c4c4;
+    padding: 10px;
+}
+
+.table-header {
+    position: relative;
+    text-align: left;
+    padding: 10px;
+    background-color: "#f4f4f4";
+    text-align: left;
+    width: 400px;
+}
+
+.descrition {
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.descrition svg {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.table-header select {
+    font-size: 0.9rem;
+    padding: 5px;
+    border-radius: 7px;
+}
+
+.table-header span {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.filter {
+    margin-left: 20px;
+}
+
+.filter-container {
+    padding: 200px;
+}
+
+.table-cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 50px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .table {
+        max-height: 500px;
+        /* Уменьшаем максимальную высоту таблицы */
+    }
+
+    .table-header {
+        width: auto;
+        /* Убираем фиксированную ширину заголовка */
+        padding: 8px;
+    }
+
+    .table-header select {
+        font-size: 0.8rem;
+        /* Уменьшаем размер шрифта в селекте */
+        padding: 4px;
+        /* Уменьшаем паддинг */
+    }
+
+    .table-cell {
+        padding: 6px;
+        /* Уменьшаем отступы ячеек */
+        font-size: 0.9rem;
+        /* Уменьшаем шрифт в ячейках */
+    }
+
+    .filter-container {
+        padding: 20px;
+        /* Уменьшаем отступы в контейнере фильтра */
+    }
+}
+
+/* Для экранов до 480px */
+@media (max-width: 480px) {
+    .table-wrapper {
+        overflow-x: scroll;
+        /* Включаем горизонтальную прокрутку для маленьких экранов */
+    }
+
+    .table-cell {
+        font-size: 0.8rem;
+        /* Уменьшаем шрифт в ячейках */
+        padding: 5px;
+        /* Уменьшаем отступы в ячейках */
+    }
+
+    .table-header select {
+        font-size: 0.75rem;
+        /* Еще уменьшаем шрифт в селекте */
+        padding: 3px;
+        /* Уменьшаем паддинг */
+    }
+
+    .filter-container {
+        padding: 10px;
+        /* Еще больше уменьшаем отступы */
+    }
+}

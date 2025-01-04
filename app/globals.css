@@ -1,0 +1,154 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  background-color: #f0f0f0;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+article>*+* {
+  margin-top: 1em;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+section {
+  padding: 20px;
+  margin-left: 60px;
+}
+
+/* Стиль для блока, который будет перекрывать весь экран */
+.mobile-notice {
+  display: none;
+  /* Скрыт по умолчанию */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Полупрозрачный фон */
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 9999;
+  /* Находится поверх остальных элементов */
+}
+
+/* Контент внутри блока */
+.mobile-notice-content {
+  padding: 20px;
+  background-color: #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+/* Стили для текста внутри уведомления */
+.mobile-notice p {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+/* Стили для кнопки закрытия (если нужно) */
+.mobile-notice .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.mobile-notice .close-btn:hover {
+  color: #ff4d4d;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .mobile-notice {
+    display: flex;
+  }
+}
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+}

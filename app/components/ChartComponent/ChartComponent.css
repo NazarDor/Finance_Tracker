@@ -1,0 +1,26 @@
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.chart-title{
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.chart-component {
+  border: 1px solid #c4c4c4;
+  border-radius: 20px;
+  padding: 10px;
+
+}
+
+.pie-charts-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.pie-chart {
+  width: 48%;
+}

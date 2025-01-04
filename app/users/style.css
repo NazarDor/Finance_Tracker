@@ -1,0 +1,12 @@
+.user-page{
+    padding: 50px;
+}
+
+.add-user-btn-conteiner{
+    display: flex;
+    justify-content: end;
+}
+.add-user-btn{
+    width: 220px;
+    margin: 30px 0;
+}

@@ -1,0 +1,66 @@
+/* Базовые стили для навбара */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 100%;
+    background-color: #1e1e1e;
+    /* Тёмно-серый фон */
+    overflow: hidden;
+    transition: width 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    /* Мягкая тень */
+    z-index: 50;
+}
+
+.navbar.open {
+    width: 200px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.menu-item {
+    width: 100%;
+}
+
+.menu-item a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #e0e0e0;
+    /* Светло-серый текст */
+    padding: 15px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-item a:hover {
+    background-color: #292929;
+    /* Более тёмный фон при наведении */
+    color: #fff;
+    /* Белый текст при наведении */
+}
+
+.menu-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.menu-label {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.navbar.open .menu-label {
+    opacity: 1;
+    transform: translateX(0);
+}

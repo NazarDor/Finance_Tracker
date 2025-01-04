@@ -1,0 +1,129 @@
+.user-management-container {
+    margin: 0 auto;
+    max-width: 1800px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.user-management-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+}
+
+.user-table-header {
+    background-color: #ddd;
+}
+
+.user-table-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.user-table-cell {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.user-input,
+.user-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.user-action-button {
+    margin: 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-action-button.edit {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.user-action-button.delete {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.user-action-button.save {
+    background-color: #008cba;
+    color: #fff;
+}
+
+.user-action-button.cancel {
+    background-color: #e7e7e7;
+    color: #333;
+}
+
+.user-action-button:hover {
+    opacity: 0.8;
+}
+
+/* Стили для модального окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.modal-actions {
+    margin-top: 20px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.modal-button.confirm {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.modal-button.cancel {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.modal-button:hover {
+    opacity: 0.8;
+}
