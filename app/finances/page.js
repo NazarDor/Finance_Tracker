@@ -87,33 +87,35 @@ export default function Finances() {
           <div className="income-body">
             <ChartComponent />
             <ChartBankComponent />
-            <div className="date-filter">
-              <label>
-                Начальная дата:
-                <input
-                  type="date"
-                  name="startDate"
-                  value={dateRange.startDate}
-                  onChange={handleDateChange}
-                />
-              </label>
-              <label>
-                Конечная дата:
-                <input
-                  type="date"
-                  name="endDate"
-                  value={dateRange.endDate}
-                  onChange={handleDateChange}
-                />
-              </label>
-              <button
-                className="reset-button"
-                onClick={() => setDateRange({ startDate: "", endDate: "" })}
-              >
-                Сбросить даты
-              </button>
+            <div className="items-table">
+              <div className="date-filter">
+                <label>
+                  Начальная дата:
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={dateRange.startDate}
+                    onChange={handleDateChange}
+                  />
+                </label>
+                <label>
+                  Конечная дата:
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={dateRange.endDate}
+                    onChange={handleDateChange}
+                  />
+                </label>
+                <button
+                  className="reset-button"
+                  onClick={() => setDateRange({ startDate: "", endDate: "" })}
+                >
+                  Сбросить даты
+                </button>
+              </div>
+              <ItemsTable data={filteredData} />
             </div>
-            <ItemsTable data={filteredData} />
           </div>
         </div>
       </div>
