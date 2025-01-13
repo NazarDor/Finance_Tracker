@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import "../FormsStyle.css";
 import { useSession } from "next-auth/react";
-import { Datepicker } from "flowbite-react";
-import dayjs from "dayjs";
 
 export default function AddArticleForm({ onClose, onArticleAdded }) {
   const [name, setName] = useState("");
@@ -13,7 +11,6 @@ export default function AddArticleForm({ onClose, onArticleAdded }) {
   const [types, setTypes] = useState([]);
 
   const [amount, setAmount] = useState("");
-  const [userId, setUserId] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
@@ -95,7 +92,6 @@ export default function AddArticleForm({ onClose, onArticleAdded }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
           typeId: Number(typeId),
           categoryId: Number(categoryId),
           amount: Number(amount),
@@ -193,32 +189,18 @@ export default function AddArticleForm({ onClose, onArticleAdded }) {
               </div>
 
               <div>
-              <label className="form-label">Дата создания</label>
+                <label className="form-label">Дата создания</label>
                 <input
                   className="form-input"
                   type="date"
                   value={date || ""}
-                  onChange={(e) =>
-                    setDate(e.target.value)
-                  }
+                  onChange={(e) => setDate(e.target.value)}
                   required
                 />
               </div>
             </div>
 
             <div className="form-col">
-              <div>
-                <label className="form-label">Название статьи</label>
-                <input
-                  className="form-input"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Введите название"
-                  required
-                />
-              </div>
-
               <div>
                 <label className="form-label">Описание статьи</label>
                 <input

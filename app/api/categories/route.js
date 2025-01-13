@@ -85,7 +85,6 @@ export async function DELETE(req) {
   }
 }
 
-// Обновить категорию
 export async function PUT(req) {
   try {
     const { id, name, typeId } = await req.json();

@@ -38,52 +38,24 @@ export default function TypesTable() {
     setFormData({ name: type.name });
   };
 
-  // Сохранение изменений
-  const handleSave = () => {
-    if (formData.name.trim() === "") {
-      toast.error("Название не может быть пустым.");
-      return;
-    }
-
-    setTypes((prevTypes) =>
-      prevTypes.map((type) =>
-        type.id === editType ? { ...type, name: formData.name } : type
-      )
-    );
-    setEditType(null);
-    toast.success("Тип успешно обновлен");
-  };
-
-  // Отмена редактирования
   const handleCancel = () => {
     setEditType(null);
   };
 
-  // Открытие модального окна удаления
   const openDeleteTypeModal = (type) => {
     setTypeToDelete(type);
     setShowDeleteTypeModal(true);
   };
 
-  // Закрытие модального окна удаления
   const closeDeleteTypeModal = () => {
     setShowDeleteTypeModal(false);
-  };
-
-  // Удаление типа
-  const handleTypeDelete = () => {
-    setTypes((prevTypes) =>
-      prevTypes.filter((type) => type.id !== typeToDelete.id)
-    );
-
-    setShowDeleteTypeModal(false);
-    toast.success(`Тип "${typeToDelete.name}" удален`);
   };
 
   const openTypeForm = () => setIsTypeFormOpen(true);
   const closeTypeForm = () => setIsTypeFormOpen(false);
 
   const handleTypeAdded = () => {
+    fetchData();
     toast("Список Типов обновлен", {
       icon: "✅",
       style: {
@@ -92,6 +64,90 @@ export default function TypesTable() {
         color: "#fff",
       },
     });
+  };
+
+  const handleSave = async () => {
+    if (formData.name.trim() === "") {
+      toast.error("Название не может быть пустым.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/types", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: editType, name: formData.name }),
+      });
+
+      if (response.ok) {
+        const updatedType = await response.json();
+        fetchData();
+        setEditType(null);
+        toast.success("Тип успешно обновлен");
+      } else {
+        const error = await response.json();
+        toast.error(`Ошибка: ${error.error}`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Не удалось обновить тип");
+    }
+  };
+
+  const handleTypeDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/types", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: typeToDelete.id }),
+      });
+
+      if (response.ok) {
+        fetchData();
+        toast("Тип удален", {
+          icon: "✅",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        toast("Список Типов обновлен", {
+          icon: "✅",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        setShowDeleteTypeModal(false);
+      } else {
+        const error = await response.json();
+        toast(`Ошибка: ${error.error}`, {
+          icon: "❌",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
+    } catch (error) {
+      toast("Что-то пошло не так.", {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
   };
 
   return (
@@ -112,8 +168,8 @@ export default function TypesTable() {
       <table className="table">
         <thead className="table-header">
           <tr>
-            <th className="table-cell">Type Name</th>
-            <th className="table-cell">Actions</th>
+            <th className="table-cell">Тип</th>
+            <th className="table-cell">Действие</th>
           </tr>
         </thead>
         <tbody className="table-body">
@@ -164,13 +220,12 @@ export default function TypesTable() {
         </tbody>
       </table>
 
-      {/* Модальное окно удаления */}
       {showDeleteTypeModal && (
         <div className="modal-overlay">
           <div className="modal-container">
             <h2 className="modal-title">Подтвердите удаление</h2>
             <p>
-              Вы уверены, что хотите удалить тип "{typeToDelete.name}"? Это
+              Вы уверены, что хотите удалить тип "{typeToDelete.id}"? Это
               действие необратимо.
             </p>
             <div className="modal-actions">

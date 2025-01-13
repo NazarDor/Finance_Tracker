@@ -6,10 +6,11 @@ import Button from "../../../Button/Button";
 import AddCategoryForm from "../../../Forms/Categories/AddCategoryForm";
 
 export default function CategorieTable() {
+  const [types, setTypes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [editCategory, setEditCategory] = useState(null);
 
-  const [formData, setFormData] = useState({ name: "" });
+  const [formData, setFormData] = useState({ name: "", typeId: "", });
 
   const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -22,11 +23,14 @@ export default function CategorieTable() {
 
   const fetchData = async () => {
     try {
-      const [categoriesResponse] = await Promise.all([
+      const [typesResponse, categoriesResponse] = await Promise.all([
+        fetch("/api/types"),
         fetch("/api/categories"),
       ]);
 
+      const typesData = await typesResponse.json();
       const categoriesData = await categoriesResponse.json();
+      setTypes(typesData);
       setCategories(categoriesData);
     } catch (err) {
       console.log(err);
@@ -37,6 +41,11 @@ export default function CategorieTable() {
     fetchData();
   }, []);
 
+  const typesMap = types.reduce((acc, type) => {
+    acc[type.id] = type.name;
+    return acc;
+  }, {});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -44,24 +53,7 @@ export default function CategorieTable() {
 
   const handleEdit = (category) => {
     setEditCategory(category.id);
-    setFormData({ name: category.name });
-  };
-
-  const handleSave = () => {
-    if (formData.name.trim() === "") {
-      toast.error("Название не может быть пустым.");
-      return;
-    }
-
-    setCategory((prevCategory) =>
-      prevCategory.map((category) =>
-        category.id === editCategory
-          ? { ...category, name: formData.name }
-          : category
-      )
-    );
-    setEditCategory(null);
-    toast.success("Тип успешно обновлен");
+    setFormData({ name: category.name, typeId: category.typeId });
   };
 
   const handleCancel = () => {
@@ -77,16 +69,8 @@ export default function CategorieTable() {
     setShowDeleteCategoryModal(false);
   };
 
-  const handleCategoryDelete = () => {
-    setCategory((prevCategory) =>
-      prevCategory.filter((category) => category.id !== categoryToDelete.id)
-    );
-    
-    setShowDeleteCategoryModal(false);
-    toast.success(`Тип "${categoryToDelete.name}" удален`);
-  };
-
   const handleCategoryAdded = () => {
+    fetchData();
     toast("Список Категорий обновлен", {
       icon: "✅",
       style: {
@@ -95,6 +79,97 @@ export default function CategorieTable() {
         color: "#fff",
       },
     });
+  };
+
+  const handleSave = async () => {
+    if (formData.name.trim() === "") {
+      toast.error("Название не может быть пустым.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/categories", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: editCategory,
+          typeId: Number(formData.typeId),
+          name: formData.name,
+        }),
+        // body: JSON.stringify({
+        //   id: editCategory,
+        //   ...formData,
+        // }),
+      });
+
+      if (response.ok) {
+        fetchData();
+        setEditCategory(null);
+        toast.success("Категория успешно обновлена");
+      } else {
+        const error = await response.json();
+        toast.error(`Ошибка: ${error.error}`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Не удалось обновить категорию");
+    }
+  };
+
+  const handleCategoryDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/categories", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: categoryToDelete.id }),
+      });
+
+      if (response.ok) {
+        fetchData();
+        toast("Категория удалена", {
+          icon: "✅",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        toast("Список категорий обновлен", {
+          icon: "✅",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        setShowDeleteCategoryModal(false);
+      } else {
+        const error = await response.json();
+        toast(`Ошибка: ${error.error}`, {
+          icon: "❌",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
+    } catch (error) {
+      toast("Что-то пошло не так.", {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
   };
 
   return (
@@ -118,14 +193,32 @@ export default function CategorieTable() {
       <table className="table">
         <thead className="table-header">
           <tr>
-            <th className="table-cell">Type Name</th>
-            <th className="table-cell">Actions</th>
+            <th className="table-cell">Тип</th>
+            <th className="table-cell">Категория</th>
+            <th className="table-cell">Действия</th>
           </tr>
         </thead>
         <tbody className="table-body">
           {categories.map((category) =>
             editCategory === category.id ? (
               <tr key={category.id} className="table-row">
+                <td className="table-cell">
+                  <select
+                    name="typeId"
+                    value={formData.typeId || category.typeId}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Выберите тип
+                    </option>
+                    {types.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.name}
+                      </option>
+                    ))}
+                  </select>
+                </td>
                 <td className="table-cell">
                   <input
                     type="text"
@@ -149,6 +242,7 @@ export default function CategorieTable() {
               </tr>
             ) : (
               <tr key={category.id} className="table-row">
+                <td className="table-cell">{typesMap[category.typeId]}</td>
                 <td className="table-cell">{category.name}</td>
                 <td className="table-cell">
                   <button
@@ -175,8 +269,8 @@ export default function CategorieTable() {
           <div className="modal-container">
             <h2 className="modal-title">Подтвердите удаление</h2>
             <p>
-              Вы уверены, что хотите удалить тип "{categoryToDelete.name}"? Это
-              действие необратимо.
+              Вы уверены, что хотите удалить категорию "{categoryToDelete.id}"?
+              Это действие необратимо.
             </p>
             <div className="modal-actions">
               <button

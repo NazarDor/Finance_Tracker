@@ -48,6 +48,22 @@ export default function ArticlesTable() {
     fetchData();
   }, []);
 
+  const typesMap = types.reduce((acc, type) => {
+    acc[type.id] = type.name;
+    return acc;
+  }, {});
+
+  const categoriesMap = categories.reduce((acc, category) => {
+    acc[category.id] = category.name;
+    return acc;
+  }, {});
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: "2-digit", month: "long", year: "numeric" };
+    return date.toLocaleDateString("ru-RU", options);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -65,31 +81,6 @@ export default function ArticlesTable() {
     });
   };
 
-  const handleSave = () => {
-    if (formData.name.trim() === "" || formData.amount.trim() === "") {
-      toast.error("Все поля должны быть заполнены.");
-      return;
-    }
-
-    setArticles((prevArticles) =>
-      prevArticles.map((article) =>
-        article.id === editArticle
-          ? {
-              ...article,
-              name: formData.name,
-              typeId: formData.typeId,
-              categoryId: formData.categoryId,
-              amount: formData.amount,
-              date: formData.date,
-              description: formData.description,
-            }
-          : article
-      )
-    );
-    setEditArticle(null);
-    toast.success("Статья успешно обновлена");
-  };
-
   const handleCancel = () => {
     setEditArticle(null);
   };
@@ -101,14 +92,6 @@ export default function ArticlesTable() {
 
   const closeDeleteArticleModal = () => {
     setShowDeleteArticleModal(false);
-  };
-
-  const handleArticleDelete = () => {
-    setArticles((prevArticles) =>
-      prevArticles.filter((article) => article.id !== articleToDelete.id)
-    );
-    setShowDeleteArticleModal(false);
-    toast.success(`Статья "${articleToDelete.name}" удалена`);
   };
 
   const openArticleForm = () => setIsArticleFormOpen(true);
@@ -126,20 +109,91 @@ export default function ArticlesTable() {
     });
   };
 
-  const typesMap = types.reduce((acc, type) => {
-    acc[type.id] = type.name;
-    return acc;
-  }, {});
+  const handleSave = async () => {
+    if (formData.description.trim() === "") {
+      toast.error("Все поля должны быть заполнены.");
+      return;
+    }
 
-  const categoriesMap = categories.reduce((acc, category) => {
-    acc[category.id] = category.name;
-    return acc;
-  }, {});
+    try {
+      const response = await fetch("/api/articles", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: editArticle,
+          ...formData,
+        }),
+      });
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { day: "2-digit", month: "long", year: "numeric" };
-    return date.toLocaleDateString("ru-RU", options);
+      if (response.ok) {
+        const editArticle = await response.json();
+        fetchData();
+        setEditArticle(null);
+        toast.success("Категория успешно обновлена");
+      } else {
+        const error = await response.json();
+        toast.error(`Ошибка: ${error.error}`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Не удалось обновить категорию");
+    }
+  };
+
+  const handleArticleDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/articles", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: articleToDelete.id }),
+      });
+
+      if (response.ok) {
+        fetchData();
+        toast("Статья удалена", {
+          icon: "✅",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        toast("Список статей обновлен", {
+          icon: "✅",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        setShowDeleteArticleModal(false);
+      } else {
+        const error = await response.json();
+        toast(`Ошибка: ${error.error}`, {
+          icon: "❌",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
+    } catch (error) {
+      toast("Что-то пошло не так.", {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
   };
 
   return (
@@ -282,8 +336,8 @@ export default function ArticlesTable() {
           <div className="modal-container">
             <h2 className="modal-title">Подтвердите удаление</h2>
             <p>
-              Вы уверены, что хотите удалить статью "{articleToDelete.name}"?
-              Это действие необратимо.
+              Вы уверены, что хотите удалить статью "{articleToDelete.id}"? Это
+              действие необратимо.
             </p>
             <div className="modal-actions">
               <button
