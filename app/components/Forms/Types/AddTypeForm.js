@@ -2,28 +2,25 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import "./AddUserForm.css"
+import "../FormsStyle.css";
 
-export default function AddUserForm({ onClose, onUserAdded }) {
+export default function AddTypeForm({ onClose, onTypeAdded }) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("Church_member");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/users", {
+      const response = await fetch("/api/types", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password, status }),
+        body: JSON.stringify({ name }),
       });
 
       if (response.ok) {
-        toast("Пользователь добавлен", {
+        toast("Тип добавллен", {
           icon: "✅",
           style: {
             borderRadius: "10px",
@@ -31,11 +28,8 @@ export default function AddUserForm({ onClose, onUserAdded }) {
             color: "#fff",
           },
         });
-        onUserAdded();
+        onTypeAdded();
         setName("");
-        setEmail("");
-        setPassword("");
-        setStatus("Church_member");
         onClose();
       } else {
         const error = await response.json();
@@ -63,50 +57,20 @@ export default function AddUserForm({ onClose, onUserAdded }) {
   return (
     <div className="form-modal">
       <div className="form-modal-content">
-        <h1>Add User</h1>
+        <h2 className="form-title">Add Type</h2>
         <form onSubmit={handleSubmit}>
           <div>
             <label>Name</label>
             <input
+              className="form-input"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
-          <div>
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Status</label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              required
-            >
-              <option value="Admin">Admin</option>
-              <option value="Pastor">Pastor</option>
-              <option value="Leader">Leader</option>
-              <option value="Church_member">Church Member</option>
-            </select>
-          </div>
           <div className="form-actions">
-            <button type="submit">Add User</button>
+            <button type="submit">Добавить тип</button>
             <button type="button" onClick={onClose}>
               Cancel
             </button>

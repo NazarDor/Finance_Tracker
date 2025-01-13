@@ -8,16 +8,18 @@ import {
   faDollarSign,
   faUsers,
   faCalendarDays,
+  faFileInvoiceDollar
 } from "@fortawesome/free-solid-svg-icons";
 import "./page.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
+import 'flowbite';
 const menuItems = [
   { icon: faUserTie, label: "Служителі", link: "/leaders" },
   { icon: faDollarSign, label: "Фінанси", link: "/finances" },
   { icon: faUsers, label: "Користувачі", link: "/users" },
   { icon: faCalendarDays, label: "Календар", link: "/calendar" },
+  { icon: faFileInvoiceDollar, label: "Статті", link: "/articles" },
   { icon: faCog, label: "Налаштування", link: "/settings" },
 ];
 

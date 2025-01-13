@@ -5,7 +5,7 @@ import { Chart } from "react-google-charts";
 import Button from "../Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../ChartComponent/ChartComponent.css";
-import { items, types, categories } from "../../data";
+import { articles, types, categories } from "../../data";
 import {
   faChartLine,
   faChartBar,
@@ -64,7 +64,7 @@ export default function ChartComponent() {
   };
 
   useEffect(() => {
-    const processedData = items.map((item) => {
+    const processedData = articles.map((item) => {
       const type = types.find((t) => t.id === item.type_id)?.name || "Unknown";
       const category =
         categories.find((c) => c.id === item.category_id)?.name || "Unknown";
@@ -127,7 +127,7 @@ export default function ChartComponent() {
     });
 
     setChartBankData(updatedChartBankData);
-  }, [items, types, categories]);
+  }, [articles, types, categories]);
 
   const renderChart = () => {
     if (chartType === "pie") {

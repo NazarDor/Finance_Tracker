@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import "./Finances.css";
-import { items, types, categories } from "../data";
+import { articles, types, categories } from "../data";
 import ChartComponent from "../components/ChartComponent/ChartComponent";
 import ChartBankComponent from "../components/ChartBankComponent/ChartBankComponent";
-import ItemsTable from "../components/ItemsTable/ItemsTable";
+import ItemsTable from "../components/Tables/ItemsTable/ItemsTable";
 
 export default function Finances() {
   const [itemsData, setItemsData] = useState([]);
@@ -18,18 +18,18 @@ export default function Finances() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const [itemsResponse, typesResponse, categoriesResponse] =
-        //   await Promise.all([
-        //     fetch("http://localhost/api/items"),
-        //     fetch("http://localhost/api/types"),
-        //     fetch("http://localhost/api/categories"),
-        //   ]);
+        const [itemsResponse, typesResponse, categoriesResponse] =
+          await Promise.all([
+            fetch("http://localhost/api/articles"),
+            fetch("http://localhost/api/types"),
+            fetch("http://localhost/api/categories"),
+          ]);
 
-        // const items = await itemsResponse.json();
-        // const types = await typesResponse.json();
-        // const categories = await categoriesResponse.json();
+        const articles = await itemsResponse.json();
+        const types = await typesResponse.json();
+        const categories = await categoriesResponse.json();
 
-        const processedData = items.map((item) => {
+        const processedData = articles.map((item) => {
           const type =
             types.find((t) => t.id === item.type_id)?.name || "Unknown";
           const category =

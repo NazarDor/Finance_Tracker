@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./ItemsTable.css";
-import TooltipIcon from "../TooltipIcon/TooltipIcon";
+import TooltipIcon from "../../TooltipIcon/TooltipIcon";
 
 export default function ItemsTable({ data }) {
   const [filters, setFilters] = useState({

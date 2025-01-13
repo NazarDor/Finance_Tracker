@@ -8,6 +8,7 @@ import {
   faDollarSign,
   faUsers,
   faCalendarDays,
+  faFileInvoiceDollar
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,6 +28,7 @@ export default function Navbar() {
     { icon: faDollarSign, label: "Фінанси", link: "/finances" },
     { icon: faUsers, label: "Користувачі", link: "/users" },
     { icon: faCalendarDays, label: "Календар", link: "/calendar" },
+    { icon: faFileInvoiceDollar, label: "Статті", link: "/articles" },
     { icon: faCog, label: "Налаштування", link: "/settings" },
   ];
 

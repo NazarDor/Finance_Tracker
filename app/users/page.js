@@ -3,7 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import UserTable from "../components/UsersTable/UserTable";
-import AddUserForm from "../components/Forms/AddUserForm";
+import AddUserForm from "../components/Forms/User/AddUserForm";
 import "./style.css";
 import { useSession } from "next-auth/react";
 
