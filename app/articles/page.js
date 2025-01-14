@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import "./Articles.css";
 import TypesTable from "../components/Tables/ArticlesTable/ArticleTypes/TypesTable";
 import CategorieTable from "../components/Tables/ArticlesTable/ArticleCategory/CategoriesTable";
 import ArticlesTable from "../components/Tables/ArticlesTable/Articles/ArticlesTable";
-import { useSession } from "next-auth/react";
-import Button from "../components/Button/Button";
-import toast from "react-hot-toast";
 
 export default function Articles() {
-  const { data: session } = useSession();
-
   return (
     <section>
       <div className="articles">

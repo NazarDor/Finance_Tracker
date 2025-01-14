@@ -5,7 +5,6 @@ import { Chart } from "react-google-charts";
 import Button from "../Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./ChartComponent.css";
-import { articles, types, categories } from "../../data";
 import {
   faChartLine,
   faChartBar,
@@ -52,80 +51,87 @@ export default function ChartComponent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const [itemsResponse, typesResponse, categoriesResponse] =
-        //   await Promise.all([
-        //     fetch("http://localhost/api/articles"),
-        //     fetch("http://localhost/api/types"),
-        //     fetch("http://localhost/api/categories"),
-        //   ]);
+        const [itemsResponse, typesResponse, categoriesResponse] =
+          await Promise.all([
+            fetch("api/articles"),
+            fetch("api/types"),
+            fetch("api/categories"),
+          ]);
 
-        // const articles = await itemsResponse.json();
-        // const types = await typesResponse.json();
-        // const categories = await categoriesResponse.json();
+        const articles = await itemsResponse.json();
+        const types = await typesResponse.json();
+        const categories = await categoriesResponse.json();
 
-        const processedData = articles.map((item) => {
-          const type =
-            types.find((t) => t.id === item.type_id)?.name || "Unknown";
-          const category =
-            categories.find((c) => c.id === item.category_id)?.name ||
-            "Unknown";
+        const typeMap = types.reduce((acc, type) => {
+          acc[type.id] = type.name;
+          return acc;
+        }, {});
+
+        const categoryMap = categories.reduce((acc, category) => {
+          acc[category.id] = category.name;
+          return acc;
+        }, {});
+
+        const sortedData = articles.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
+
+        const processedData = sortedData.map((item) => {
+          const type = typeMap[item.typeId] || "Unknown";
+          const category = categoryMap[item.categoryId] || "Unknown";
 
           return {
             date: new Date(item.date),
-            month: new Date(item.date).toLocaleString("uk-UA", {
-              month: "long",
-            }),
             type,
             category,
-            price: parseFloat(item.amount),
+            amount: parseFloat(item.amount),
             description: item.description || "",
           };
         });
 
-        const months = [...new Set(processedData.map((item) => item.month))];
         const categoriesList = [
           ...new Set(processedData.map((item) => item.category)),
         ];
 
         const updatedChartData = {
-          line: [["Місяць", "Надходження", "Витрати"]],
-          bar: [["Місяць", "Надходження", "Витрати"]],
+          line: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
+          bar: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
           pieIncome: [["Категорія", "Сумма"]],
           pieExpense: [["Категорія", "Сумма"]],
-          area: [["Місяць", "Надходження", "Витрати"]],
-          column: [["Місяць", "Надходження", "Витрати"]],
+          area: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
+          column: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
         };
 
-        months.forEach((month) => {
-          const income = processedData
-            .filter(
-              (item) => item.month === month && item.type === "Надходження"
-            )
-            .reduce((sum, item) => sum + item.price, 0);
-
-          const expenses = processedData
-            .filter((item) => item.month === month && item.type === "Витрати")
-            .reduce((sum, item) => sum + item.price, 0);
-
-          updatedChartData.line.push([month, income, expenses]);
-          updatedChartData.column.push([month, income, expenses]);
-          updatedChartData.bar.push([month, income, expenses]);
-          updatedChartData.area.push([month, income, expenses]);
+        processedData.forEach((item) => {
+          const dateLabel = new Date(item.date).toLocaleDateString("uk-UA");
+          const amount = Number(item.amount) || 0;
+          if (item.type == "Надходження (Каса)") {
+            updatedChartData.line.push([dateLabel, amount, 0]);
+            updatedChartData.column.push([dateLabel, amount, 0]);
+            updatedChartData.bar.push([dateLabel, amount, 0]);
+            updatedChartData.area.push([dateLabel, amount, 0]);
+          } else if (item.type == "Витрати (Каса)") {
+            updatedChartData.line.push([dateLabel, 0, amount]);
+            updatedChartData.column.push([dateLabel, 0, amount]);
+            updatedChartData.bar.push([dateLabel, 0, amount]);
+            updatedChartData.area.push([dateLabel, 0, amount]);
+          }
         });
 
         categoriesList.forEach((category) => {
           const incomeAmount = processedData
             .filter(
               (item) =>
-                item.category === category && item.type === "Надходження"
+                item.category == category && item.type == "Надходження (Каса)"
             )
-            .reduce((sum, item) => sum + item.price, 0);
+            .reduce((sum, item) => sum + item.amount, 0);
 
           const expenseAmount = processedData
             .filter(
-              (item) => item.category === category && item.type === "Витрати"
+              (item) =>
+                item.category == category && item.type == "Витрати (Каса)"
             )
-            .reduce((sum, item) => sum + item.price, 0);
+            .reduce((sum, item) => sum + item.amount, 0);
 
           updatedChartData.pieIncome.push([category, incomeAmount]);
           updatedChartData.pieExpense.push([category, expenseAmount]);
@@ -138,7 +144,7 @@ export default function ChartComponent() {
     };
 
     fetchData();
-  }, [articles, types, categories]);
+  }, []);
 
   const renderChart = () => {
     if (chartType === "pie") {
@@ -168,28 +174,26 @@ export default function ChartComponent() {
           </div>
         </div>
       );
-    } else {
-      return (
-        <Chart
-          className="chart-component"
-          chartType={
-            chartType === "line"
-              ? "LineChart"
-              : chartType === "bar"
-              ? "BarChart"
-              : chartType === "area"
-              ? "AreaChart"
-              : chartType === "column"
-              ? "ColumnChart"
-              : "PieChart"
-          }
-          data={chartData[chartType]}
-          options={chartOptions[chartType]}
-          width={"100%"}
-          height={"400px"}
-        />
-      );
     }
+
+    return (
+      <Chart
+        className="chart-component"
+        chartType={
+          chartType === "line"
+            ? "LineChart"
+            : chartType === "bar"
+            ? "BarChart"
+            : chartType === "area"
+            ? "AreaChart"
+            : "ColumnChart"
+        }
+        data={chartData[chartType]}
+        options={chartOptions[chartType]}
+        width={"100%"}
+        height={"400px"}
+      />
+    );
   };
 
   return (

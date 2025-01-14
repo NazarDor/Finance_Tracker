@@ -1,50 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ItemsTable.css";
 import TooltipIcon from "../../TooltipIcon/TooltipIcon";
 
-export default function ItemsTable({ data }) {
+export default function ItemsTable() {
+  const [itemsData, setItemsData] = useState([]);
   const [filters, setFilters] = useState({
-    type: "Надходження",
+    type: "Усі",
     month: "Усі",
     category: "Усі",
   });
 
-  const getMonthFromDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("uk-UA", { month: "long" });
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [articlesData, typesData, categoriesData] = await Promise.all([
+          fetch("/api/articles").then((res) => res.json()),
+          fetch("/api/types").then((res) => res.json()),
+          fetch("/api/categories").then((res) => res.json()),
+        ]);
 
-  // Add month field dynamically from date
-  const processedData = data.map((item) => ({
-    ...item,
-    month: getMonthFromDate(item.date),
-    fullDate: `${item.date} (${getMonthFromDate(item.date)})`,
-  }));
+        const processedData = articlesData.map((item) => {
+          const type = typesData.find((t) => t.id === item.typeId)?.name || "Unknown";
+          const category =
+            categoriesData.find((c) => c.id === item.categoryId)?.name || "Unknown";
 
-  const uniqueValues = {
-    type: [...new Set(processedData.map((item) => item.type))],
-    month: [...new Set(processedData.map((item) => item.month))],
-    category:
-      filters.type === "Усі"
-        ? [...new Set(processedData.map((item) => item.category))]
-        : [
-            ...new Set(
-              processedData
-                .filter((item) => item.type === filters.type)
-                .map((item) => item.category)
-            ),
-          ],
-  };
+          return {
+            date: new Date(item.date).toISOString(),
+            month: new Date(item.date).toLocaleString("uk-UA", {
+              month: "long",
+            }),
+            type,
+            category,
+            price: parseFloat(item.amount),
+            description: item.description || "",
+          };
+        });
 
-  const filteredData = processedData.filter((item) => {
-    return (
-      (filters.type === "Усі" || item.type === filters.type) &&
-      (filters.month === "Усі" || item.month === filters.month) &&
-      (filters.category === "Усі" || item.category === filters.category)
-    );
-  });
+        setItemsData(processedData);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      }
+    };
 
-  const totalSum = filteredData.reduce((acc, item) => acc + item.price, 0);
+    fetchData();
+  }, []);
+
+  const totalSum = itemsData.reduce((acc, item) => acc + item.price, 0);
 
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({
@@ -54,16 +55,21 @@ export default function ItemsTable({ data }) {
     }));
   };
 
-  const formatFullDate = (fullDate) => {
-    const date = new Date(fullDate);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = date.toLocaleString("uk-UA", { month: "long" });
-    const year = date.getFullYear();
-
-    return `${day}.${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}.${year} (${month[0].toUpperCase() + month.slice(1)})`;
+  const formatFullDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("uk-UA", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
   };
+
+  const filteredData = itemsData.filter((item) => {
+    return (
+      (filters.type === "Усі" || item.type === filters.type) &&
+      (filters.month === "Усі" || item.month === filters.month) &&
+      (filters.category === "Усі" || item.category === filters.category)
+    );
+  });
 
   return (
     <div>
@@ -80,7 +86,8 @@ export default function ItemsTable({ data }) {
                   value={filters.type}
                   onChange={(e) => handleFilterChange("type", e.target.value)}
                 >
-                  {uniqueValues.type.map((type) => (
+                  <option value="Усі">Усі</option>
+                  {[...new Set(itemsData.map((item) => item.type))].map((type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>
@@ -96,7 +103,7 @@ export default function ItemsTable({ data }) {
                   onChange={(e) => handleFilterChange("month", e.target.value)}
                 >
                   <option value="Усі">Усі</option>
-                  {uniqueValues.month.map((month) => (
+                  {[...new Set(itemsData.map((item) => item.month))].map((month) => (
                     <option key={month} value={month}>
                       {month}
                     </option>
@@ -114,11 +121,13 @@ export default function ItemsTable({ data }) {
                   }
                 >
                   <option value="Усі">Усі</option>
-                  {uniqueValues.category.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
+                  {[...new Set(itemsData.map((item) => item.category))].map(
+                    (category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    )
+                  )}
                 </select>
               </th>
               <th className="table-header">
@@ -139,7 +148,7 @@ export default function ItemsTable({ data }) {
             {filteredData.map((item, index) => (
               <tr key={index}>
                 <td className="table-cell">{item.type}</td>
-                <td className="table-cell">{formatFullDate(item.fullDate)}</td>
+                <td className="table-cell">{formatFullDate(item.date)}</td>
                 <td className="table-cell">{item.category}</td>
                 <td className="table-cell">
                   {item.price.toLocaleString("uk-UA", {
