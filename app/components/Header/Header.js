@@ -2,40 +2,43 @@
 
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useState } from "react";
 import "./Header.css";
 
 export default function Header() {
   const { data: session } = useSession();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const handleLogoClick = () => {
+    setDropdownVisible((prev) => !prev);
+  };
 
   return (
     <header className="header">
-      <div className="logo-container">
-        <Image
-          src="/logo.png"
-          width={50}
-          height={50}
-          alt="Logo"
-          className="logo"
-        />
-        <h1 className="header-title">Church</h1>
-      </div>
-
-      <div className="auth-container">
-        {session ? (
-          <div className="user-info">
+      {session ? (
+        <div className="auth-container">
+          <div className="logo-container" onClick={handleLogoClick}>
             <Image
-              src={session.user.image || "/logo.png"}
-              width={40}
-              height={40}
-              alt="User Avatar"
-              className="avatar"
+              src="/logo.png"
+              width={50}
+              height={50}
+              alt="Logo"
+              className="logo"
             />
-            <span className="user-name">{session.user.name || "User"}</span>
-            <button onClick={() => signOut()} className="logout-button">
-              Logout
-            </button>
+            <div className="user-info">
+              <span className="user-name">{session.user.name || "User"}</span>
+              {dropdownVisible && (
+                <div className="dropdown-menu">
+                  <button onClick={() => signOut()} className="logout-button">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
+        </div>
+      ) : (
+        <div className="auth-container">
           <button
             onClick={() =>
               signIn("github", { callbackUrl: "/", redirect: true })
@@ -44,8 +47,8 @@ export default function Header() {
           >
             Sign in
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 }

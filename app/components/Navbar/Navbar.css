@@ -1,21 +1,31 @@
-/* Базовые стили для навбара */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 60px;
+    width: 200px;
     height: 100%;
+    padding: 60px 0;
     background-color: #1e1e1e;
-    /* Тёмно-серый фон */
-    overflow: hidden;
-    transition: width 0.3s ease;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    /* Мягкая тень */
-    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
 }
 
 .navbar.open {
-    width: 200px;
+    transform: translateX(0);
+}
+
+.burger {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 24px;
+    z-index: 110;
+    cursor: pointer;
 }
 
 .menu {
@@ -37,16 +47,13 @@
     align-items: center;
     text-decoration: none;
     color: #e0e0e0;
-    /* Светло-серый текст */
     padding: 15px 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .menu-item a:hover {
     background-color: #292929;
-    /* Более тёмный фон при наведении */
     color: #fff;
-    /* Белый текст при наведении */
 }
 
 .menu-icon {
@@ -55,12 +62,28 @@
 }
 
 .menu-label {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.navbar.open .menu-label {
     opacity: 1;
     transform: translateX(0);
+    transition: none;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        width: 100%;
+    }
+
+    .menu {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .menu-item a {
+        justify-content: center;
+        padding: 15px;
+        font-size: 1.2rem;
+    }
+
+    .burger {
+        display: block;
+    }
 }

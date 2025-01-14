@@ -1,4 +1,15 @@
-/* styles/loading-page.css */
+.main {
+    display: flex;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+    margin: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 .loading-page {
     display: flex;
     flex-direction: column;

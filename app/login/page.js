@@ -38,7 +38,7 @@ export default function Login() {
             className="login-image"
           />
         </div>
-        <h1>Spring of Life</h1>
+        <h1>ND-Studio</h1>
         {error && <p className="login-error">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">

@@ -4,8 +4,8 @@ import MainLayout from "./components/MainLayout/MainLayout"
 import 'flowbite';
 
 export const metadata = {
-  title: "Spring Of Life",
-  description: "Church",
+  title: "ND-Studio",
+  description: "my studio",
 };
 
 export default function RootLayout({ children }) {

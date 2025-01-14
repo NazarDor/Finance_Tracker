@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "../Header/Header";
 import Navbar from "../Navbar/Navbar";
-import './loading-page.css';
+import "./loading-page.css";
 
 export default function MainLayout({ children }) {
   const { data: session, status } = useSession();
@@ -37,8 +37,10 @@ export default function MainLayout({ children }) {
       {session ? (
         <>
           <Header />
-          <Navbar />
-          <main>{children}</main>
+          <div className="main">
+            <Navbar />
+            <main className="container">{children}</main>
+          </div>
         </>
       ) : (
         <>{children}</>
