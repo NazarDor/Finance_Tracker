@@ -23,10 +23,10 @@ export default function Navbar() {
   const handleLinkClick = () => setIsOpen(false);
 
   const menuItems = [
-    { icon: faHome, label: "Головна", link: "/" },
-    { icon: faDollarSign, label: "Фінанси", link: "/finances" },
-    { icon: faUsers, label: "Користувачі", link: "/users" },
-    { icon: faFileInvoiceDollar, label: "Статті", link: "/articles" },
+    { icon: faHome, label: "Гравная", link: "/" },
+    { icon: faDollarSign, label: "Финансы", link: "/finances" },
+    { icon: faFileInvoiceDollar, label: "Статьи", link: "/articles" },
+    { icon: faUsers, label: "Пользователи", link: "/users" },
   ];
 
   return (

@@ -9,6 +9,7 @@ export default function ItemsTable() {
     month: "Усі",
     category: "Усі",
   });
+  const [availableCategories, setAvailableCategories] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,9 +21,11 @@ export default function ItemsTable() {
         ]);
 
         const processedData = articlesData.map((item) => {
-          const type = typesData.find((t) => t.id === item.typeId)?.name || "Unknown";
+          const type =
+            typesData.find((t) => t.id === item.typeId)?.name || "Unknown";
           const category =
-            categoriesData.find((c) => c.id === item.categoryId)?.name || "Unknown";
+            categoriesData.find((c) => c.id === item.categoryId)?.name ||
+            "Unknown";
 
           return {
             date: new Date(item.date).toISOString(),
@@ -45,7 +48,28 @@ export default function ItemsTable() {
     fetchData();
   }, []);
 
-  const totalSum = itemsData.reduce((acc, item) => acc + item.price, 0);
+  useEffect(() => {
+    if (filters.type === "Усі") {
+      setAvailableCategories([
+        ...new Set(itemsData.map((item) => item.category)),
+      ]);
+    } else {
+      const filteredCategories = itemsData
+        .filter((item) => item.type === filters.type)
+        .map((item) => item.category);
+      setAvailableCategories([...new Set(filteredCategories)]);
+    }
+  }, [filters.type, itemsData]);
+
+  const filteredData = itemsData.filter((item) => {
+    return (
+      (filters.type === "Усі" || item.type === filters.type) &&
+      (filters.month === "Усі" || item.month === filters.month) &&
+      (filters.category === "Усі" || item.category === filters.category)
+    );
+  });
+
+  const totalSum = filteredData.reduce((acc, item) => acc + item.price, 0);
 
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({
@@ -63,18 +87,9 @@ export default function ItemsTable() {
     });
   };
 
-  const filteredData = itemsData.filter((item) => {
-    return (
-      (filters.type === "Усі" || item.type === filters.type) &&
-      (filters.month === "Усі" || item.month === filters.month) &&
-      (filters.category === "Усі" || item.category === filters.category)
-    );
-  });
-
   return (
     <div>
-      <h2>Загальний список статей надходжень та витрат</h2>
-      <div className="table max-h-[400px] overflow-y-scroll">
+      <div>
         <table className="table-body">
           <thead>
             <tr>
@@ -87,11 +102,13 @@ export default function ItemsTable() {
                   onChange={(e) => handleFilterChange("type", e.target.value)}
                 >
                   <option value="Усі">Усі</option>
-                  {[...new Set(itemsData.map((item) => item.type))].map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
+                  {[...new Set(itemsData.map((item) => item.type))].map(
+                    (type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    )
+                  )}
                 </select>
               </th>
               <th className="table-header">
@@ -103,11 +120,13 @@ export default function ItemsTable() {
                   onChange={(e) => handleFilterChange("month", e.target.value)}
                 >
                   <option value="Усі">Усі</option>
-                  {[...new Set(itemsData.map((item) => item.month))].map((month) => (
-                    <option key={month} value={month}>
-                      {month}
-                    </option>
-                  ))}
+                  {[...new Set(itemsData.map((item) => item.month))].map(
+                    (month) => (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    )
+                  )}
                 </select>
               </th>
               <th className="table-header">
@@ -119,19 +138,17 @@ export default function ItemsTable() {
                   onChange={(e) =>
                     handleFilterChange("category", e.target.value)
                   }
+                  disabled={filters.type === "Усі"} // Блокировка, если тип не выбран
                 >
                   <option value="Усі">Усі</option>
-                  {[...new Set(itemsData.map((item) => item.category))].map(
-                    (category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    )
-                  )}
+                  {availableCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
                 </select>
               </th>
-              <th className="table-header">
-                Загальна сумма
+              <th className="table-header amount">
                 <span>
                   (
                   {totalSum.toLocaleString("uk-UA", {
@@ -141,7 +158,6 @@ export default function ItemsTable() {
                   )
                 </span>
               </th>
-              <th className="table-header descrition"></th>
             </tr>
           </thead>
           <tbody>
@@ -155,9 +171,10 @@ export default function ItemsTable() {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
-                </td>
-                <td className="table-cell descrition">
-                  <TooltipIcon description={item.description} />
+                  <TooltipIcon
+                    className="tooltip"
+                    description={item.description}
+                  />
                 </td>
               </tr>
             ))}

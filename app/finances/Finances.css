@@ -1,20 +1,18 @@
-.add-btn-conteiner{
+.add-btn-conteiner {
     display: flex;
     justify-content: flex-end;
     padding: 20px;
 }
 
-.items-table{
+.items-table {
     display: flex;
     flex-direction: column;
-align-items: end;
 }
 
 .finances {
     background-color: rgb(255 255 255);
     border: 1px solid #c4c4c4;
-    border-radius: 20px;
-    padding: 20px 20px 20px 20px;
+    padding: 15px;
 }
 
 .income_container {
@@ -80,4 +78,10 @@ align-items: end;
 
 .reset-button:active {
     background: #111;
+}
+
+@media (max-width: 768px) {
+    .income-body {
+        padding: 0;
+    }
 }

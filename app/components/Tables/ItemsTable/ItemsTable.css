@@ -66,24 +66,30 @@
     width: 50px;
 }
 
+.tooltip{
+    padding: 20px;
+}
+
+
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .table {
         max-height: 500px;
-        /* Уменьшаем максимальную высоту таблицы */
+        max-width: 300px;
+    }
+
+    .amount{
+        display: none;
     }
 
     .table-header {
-        width: auto;
-        /* Убираем фиксированную ширину заголовка */
         padding: 8px;
     }
 
     .table-header select {
-        font-size: 0.8rem;
-        /* Уменьшаем размер шрифта в селекте */
-        padding: 4px;
-        /* Уменьшаем паддинг */
+        font-size: 12px;
+        padding: 8px;
     }
 
     .table-cell {
@@ -97,31 +103,50 @@
         padding: 20px;
         /* Уменьшаем отступы в контейнере фильтра */
     }
-}
 
-/* Для экранов до 480px */
-@media (max-width: 480px) {
-    .table-wrapper {
-        overflow-x: scroll;
-        /* Включаем горизонтальную прокрутку для маленьких экранов */
+    /* Контейнер карточек */
+    .table-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .table-cell {
-        font-size: 0.8rem;
-        /* Уменьшаем шрифт в ячейках */
+
+
+    /* Карточка */
+    .table-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
         padding: 5px;
-        /* Уменьшаем отступы в ячейках */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .table-header select {
-        font-size: 0.75rem;
-        /* Еще уменьшаем шрифт в селекте */
-        padding: 3px;
-        /* Уменьшаем паддинг */
+    .table-card .card-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
     }
 
-    .filter-container {
-        padding: 10px;
-        /* Еще больше уменьшаем отступы */
+    .table-card .card-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .table-card .label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .table-card .value {
+        color: #333;
+        text-align: right;
+    }
+
+    .total-sum {
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+        text-align: center;
+        color: #444;
     }
 }

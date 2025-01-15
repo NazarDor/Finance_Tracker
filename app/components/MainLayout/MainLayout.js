@@ -13,12 +13,10 @@ export default function MainLayout({ children }) {
 
   useEffect(() => {
     if (status === "authenticated" && router.pathname === "/login") {
-      // Если пользователь уже аутентифицирован, но находится на странице логина
       router.push("/");
     }
 
     if (status === "unauthenticated" && router.pathname !== "/login") {
-      // Если пользователь не аутентифицирован, но находится не на странице логина
       router.push("/login");
     }
   }, [status, router]);

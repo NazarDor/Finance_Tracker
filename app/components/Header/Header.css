@@ -1,12 +1,17 @@
 /* Общий стиль хедера */
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: end;
     align-items: center;
     padding: 10px 20px;
     background-color: #1e1e1e;
     color: #e0e0e0;
+    width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 100;
 }
 
 /* Логотип и заголовок */

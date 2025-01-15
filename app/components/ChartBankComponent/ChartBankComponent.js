@@ -17,14 +17,14 @@ import {
 export default function ChartComponent() {
   const [chartType, setChartType] = useState("column");
   const [chartBankData, setChartBankData] = useState({
-    bank: [["Місяць", "Надходження (БАНК)", "Витрати (БАНК)"]],
+    bank: [["Месяц", "Доход", "Расход"]],
   });
 
   const chartOptions = {
     line: {
       legend: { position: "top" },
       colors: ["#008000", "#FFA500"],
-      hAxis: { title: "Місяць", titleTextStyle: { color: "#333" } },
+      hAxis: { title: "Месяц", titleTextStyle: { color: "#333" } },
       vAxis: { title: "Сумма", titleTextStyle: { color: "#333" }, minValue: 0 },
     },
     bar: {
@@ -36,7 +36,7 @@ export default function ChartComponent() {
     column: {
       legend: { position: "top" },
       colors: ["#008000", "#FFA500"],
-      hAxis: { title: "Місяць", titleTextStyle: { color: "#333" } },
+      hAxis: { title: "Месяц", titleTextStyle: { color: "#333" } },
       vAxis: { title: "Сумма", titleTextStyle: { color: "#333" }, minValue: 0 },
     },
     pie: {
@@ -58,7 +58,7 @@ export default function ChartComponent() {
     bank: {
       legend: { position: "top" },
       colors: ["#008000", "#FFA500"],
-      hAxis: { title: "Місяць", titleTextStyle: { color: "#333" } },
+      hAxis: { title: "Месяц", titleTextStyle: { color: "#333" } },
       vAxis: { title: "Сумма", titleTextStyle: { color: "#333" }, minValue: 0 },
     },
   };
@@ -89,19 +89,19 @@ export default function ChartComponent() {
     const updatedChartBankData = {
       pieBankIncome: [["Категорія", "Сумма"]],
       pieBankExpense: [["Категорія", "Сумма"]],
-      bank: [["Місяць", "Надходження (БАНК)", "Витрати (БАНК)"]],
+      bank: [["Месяц", "Доход", "Расход"]],
     };
 
     months.forEach((month) => {
       const bankIncome = processedData
         .filter(
-          (item) => item.month === month && item.type === "Надходження (БАНК)"
+          (item) => item.month === month && item.type === "Доход"
         )
         .reduce((sum, item) => sum + item.price, 0);
 
       const bankExpense = processedData
         .filter(
-          (item) => item.month === month && item.type === "Витрати (БАНК)"
+          (item) => item.month === month && item.type === "Расход"
         )
         .reduce((sum, item) => sum + item.price, 0);
 
@@ -112,13 +112,13 @@ export default function ChartComponent() {
       const incomeBankAmount = processedData
         .filter(
           (item) =>
-            item.category === category && item.type === "Надходження (БАНК)"
+            item.category === category && item.type === "Доход"
         )
         .reduce((sum, item) => sum + item.price, 0);
 
       const expenseBankAmount = processedData
         .filter(
-          (item) => item.category === category && item.type === "Витрати (БАНК)"
+          (item) => item.category === category && item.type === "Расход"
         )
         .reduce((sum, item) => sum + item.price, 0);
 
@@ -134,7 +134,7 @@ export default function ChartComponent() {
       return (
         <div className="pie-charts-container">
           <div className="pie-chart">
-            <h2>Надходження</h2>
+            <h2>Доход</h2>
             <Chart
               className="chart-component"
               chartType="PieChart"
@@ -145,7 +145,7 @@ export default function ChartComponent() {
             />
           </div>
           <div className="pie-chart">
-            <h2>Витрати</h2>
+            <h2>Расход</h2>
             <Chart
               className="chart-component"
               chartType="PieChart"
@@ -195,7 +195,7 @@ export default function ChartComponent() {
   return (
     <section>
       <div className="chart-header">
-        <div className="chart-title">Надходження та видатки (БАНК)</div>
+        <div className="chart-title">Прихд и расход</div>
 
         <div className="chart-buttons">
           <Button

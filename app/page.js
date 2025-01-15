@@ -12,9 +12,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import 'flowbite';
 const menuItems = [
-  { icon: faDollarSign, label: "Фінанси", link: "/finances" },
-  { icon: faUsers, label: "Користувачі", link: "/users" },
-  { icon: faFileInvoiceDollar, label: "Статті", link: "/articles" },
+  { icon: faDollarSign, label: "Финансы", link: "/finances" },
+  { icon: faFileInvoiceDollar, label: "Статьи", link: "/articles" },
+  { icon: faUsers, label: "Пользователи", link: "/users" },
 ];
 
 export default function Home() {

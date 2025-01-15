@@ -81,3 +81,22 @@
 .dashboard-item:hover .dashboard-label {
     color: #4f545a;
 }
+
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dashboard-icon {
+        padding: 5px;
+        width: 100px;
+        height: 100px;
+    }
+
+    .dashboard-item {
+        width: 250px;
+        height: 300px;
+        padding: 20px;
+    }
+}

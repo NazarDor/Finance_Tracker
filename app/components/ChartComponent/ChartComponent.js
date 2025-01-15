@@ -16,13 +16,13 @@ import {
 export default function ChartComponent() {
   const [chartType, setChartType] = useState("column");
   const [chartData, setChartData] = useState({
-    line: [["Місяць", "Надходження", "Витрати"]],
-    bar: [["Місяць", "Надходження", "Витрати"]],
+    line: [["Месяц", "Доход", "Расход"]],
+    bar: [["Месяц", "Доход", "Расход"]],
     pieIncome: [["Категорія", "Сумма"]],
     pieExpense: [["Категорія", "Сумма"]],
-    area: [["Місяць", "Надходження", "Витрати"]],
-    column: [["Місяць", "Надходження", "Витрати"]],
-    bank: [["Місяць", "Надходження (БАНК)", "Витрати (БАНК)"]],
+    area: [["Месяц", "Доход", "Расход"]],
+    column: [["Месяц", "Доход", "Расход"]],
+    bank: [["Месяц", "Доход", "Расход"]],
   });
   const chartOptions = {
     line: {
@@ -94,23 +94,23 @@ export default function ChartComponent() {
         ];
 
         const updatedChartData = {
-          line: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
-          bar: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
+          line: [["Дата", "Доход", "Расход"]],
+          bar: [["Дата", "Доход", "Расход"]],
           pieIncome: [["Категорія", "Сумма"]],
           pieExpense: [["Категорія", "Сумма"]],
-          area: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
-          column: [["Дата", "Надходження (Каса)", "Витрати (Каса)"]],
+          area: [["Дата", "Доход", "Расход"]],
+          column: [["Дата", "Доход", "Расход"]],
         };
 
         processedData.forEach((item) => {
           const dateLabel = new Date(item.date).toLocaleDateString("uk-UA");
           const amount = Number(item.amount) || 0;
-          if (item.type == "Надходження (Каса)") {
+          if (item.type == "Доход") {
             updatedChartData.line.push([dateLabel, amount, 0]);
             updatedChartData.column.push([dateLabel, amount, 0]);
             updatedChartData.bar.push([dateLabel, amount, 0]);
             updatedChartData.area.push([dateLabel, amount, 0]);
-          } else if (item.type == "Витрати (Каса)") {
+          } else if (item.type == "Расход") {
             updatedChartData.line.push([dateLabel, 0, amount]);
             updatedChartData.column.push([dateLabel, 0, amount]);
             updatedChartData.bar.push([dateLabel, 0, amount]);
@@ -122,14 +122,14 @@ export default function ChartComponent() {
           const incomeAmount = processedData
             .filter(
               (item) =>
-                item.category == category && item.type == "Надходження (Каса)"
+                item.category == category && item.type == "Доход"
             )
             .reduce((sum, item) => sum + item.amount, 0);
 
           const expenseAmount = processedData
             .filter(
               (item) =>
-                item.category == category && item.type == "Витрати (Каса)"
+                item.category == category && item.type == "Расход"
             )
             .reduce((sum, item) => sum + item.amount, 0);
 
@@ -151,7 +151,7 @@ export default function ChartComponent() {
       return (
         <div className="pie-charts-container">
           <div className="pie-chart">
-            <h2>Надходження</h2>
+            <h2>Доход</h2>
             <Chart
               className="chart-component"
               chartType="PieChart"
@@ -162,7 +162,7 @@ export default function ChartComponent() {
             />
           </div>
           <div className="pie-chart">
-            <h2>Витрати</h2>
+            <h2>Расход</h2>
             <Chart
               className="chart-component"
               chartType="PieChart"
@@ -199,7 +199,7 @@ export default function ChartComponent() {
   return (
     <section>
       <div className="chart-header">
-        <div className="chart-title">Надходження та видатки (КАСА)</div>
+        <div className="chart-title">Доход и расход</div>
         <div className="chart-buttons">
           <Button
             isActive={chartType === "line"}

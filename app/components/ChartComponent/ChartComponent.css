@@ -4,7 +4,7 @@
   margin-bottom: 10px;
 }
 
-.chart-title{
+.chart-title {
   font-size: 24px;
   font-weight: 800;
 }
@@ -23,4 +23,23 @@
 
 .pie-chart {
   width: 48%;
+}
+
+@media (max-width: 768px) {
+  .chart-header {
+    flex-direction: column;
+  }
+  .chart-title{
+    margin: 0 0 20px 0;
+  }
+  .pie-charts-container{
+    flex-direction: column;
+  }
+  .pie-chart{
+    width: 100%;
+  }
+  .chart-buttons{
+    display: flex;
+    justify-content: space-around;
+  }
 }

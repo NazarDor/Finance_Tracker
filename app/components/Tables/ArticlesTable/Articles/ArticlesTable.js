@@ -220,7 +220,7 @@ export default function ArticlesTable() {
             <th className="table-cell">Категория</th>
             <th className="table-cell">Сумма</th>
             <th className="table-cell">Дата</th>
-            <th className="table-cell">Описание</th>
+            <th className="table-cell descr">Описание</th>
             <th className="table-cell">Действия</th>
           </tr>
         </thead>
@@ -310,7 +310,7 @@ export default function ArticlesTable() {
                 </td>
                 <td className="table-cell">{article.amount}</td>
                 <td className="table-cell">{formatDate(article.date)}</td>
-                <td className="table-cell">{article.description}</td>
+                <td className="table-cell descr">{article.description}</td>
                 <td className="table-cell">
                   <button
                     onClick={() => handleEdit(article)}
