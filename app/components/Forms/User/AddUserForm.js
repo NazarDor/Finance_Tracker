@@ -64,10 +64,11 @@ export default function AddUserForm({ onClose, onUserAdded }) {
     <div className="form-modal">
       <div className="form-modal-content">
         <h1>Add User</h1>
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
           <div>
-            <label>Name</label>
+            <label className="form-label">Name</label>
             <input
+              className="form-input"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -75,8 +76,9 @@ export default function AddUserForm({ onClose, onUserAdded }) {
             />
           </div>
           <div>
-            <label>Email</label>
+            <label className="form-label">Email</label>
             <input
+              className="form-input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -84,8 +86,9 @@ export default function AddUserForm({ onClose, onUserAdded }) {
             />
           </div>
           <div>
-            <label>Password</label>
+            <label className="form-label">Password</label>
             <input
+              className="form-input"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -93,16 +96,15 @@ export default function AddUserForm({ onClose, onUserAdded }) {
             />
           </div>
           <div>
-            <label>Status</label>
+            <label className="form-label">Status</label>
             <select
+            className="form-select"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               required
             >
               <option value="Admin">Admin</option>
-              <option value="Pastor">Pastor</option>
-              <option value="Leader">Leader</option>
-              <option value="Church_member">Church Member</option>
+              <option value="Pastor">User</option>
             </select>
           </div>
           <div className="form-actions">

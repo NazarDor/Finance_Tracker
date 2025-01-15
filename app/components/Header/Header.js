@@ -4,11 +4,13 @@ import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
 import "./Header.css";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const { data: session } = useSession();
   const [dropdownVisible, setDropdownVisible] = useState(false);
-
+  const pathname = usePathname();
   const handleLogoClick = () => {
     setDropdownVisible((prev) => !prev);
   };
@@ -32,6 +34,9 @@ export default function Header() {
                   <button onClick={() => signOut()} className="logout-button">
                     Logout
                   </button>
+                  <Link href="/users" className="logout-button">
+                    Profile
+                  </Link>
                 </div>
               )}
             </div>

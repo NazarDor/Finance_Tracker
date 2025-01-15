@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import "./UserTable.css";
 import { useSession } from "next-auth/react";
+import AddUserForm from "../../Forms/User/AddUserForm";
+import Button from "../../Button/Button";
 
 export default function UsersTable() {
   const [users, setUsers] = useState([]);
@@ -13,10 +15,9 @@ export default function UsersTable() {
     password: "",
     status: "",
   });
-
-  const { data: session } = useSession();
-  const [showModal, setShowModal] = useState(false); // Состояние для модального окна
-  const [userToDelete, setUserToDelete] = useState(null); // Пользователь, которого нужно удалить
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -43,7 +44,7 @@ export default function UsersTable() {
         color: "#fff",
       },
     });
-    setShowModal(false); // Закрываем модальное окно после удаления
+    setShowModal(false);
   };
 
   const handleEdit = (user) => {
@@ -69,6 +70,18 @@ export default function UsersTable() {
     });
   };
 
+  const handleUserAdded = () => {
+    fetchUsers();
+    toast("Список пользователей обновлен", {
+      icon: "✅",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -82,89 +95,96 @@ export default function UsersTable() {
     setShowModal(false);
   };
 
+  const openForm = () => setIsFormOpen(true);
+  const closeForm = () => setIsFormOpen(false);
+  const { data: session } = useSession();
+
   return (
-    <div className="user-management-container">
-      <h1 className="user-management-title">User Management</h1>
-      <table className="user-table">
-        <thead className="user-table-header">
+    <div className="management-container">
+      <div className="add-btn-conteiner">
+        {session?.user.status === "Admin" && (
+          <>
+            <Button isActive={false} buttonClicked={openForm}>
+              Добавить пользователя
+            </Button>
+          </>
+        )}
+      </div>
+      <table className="table">
+        <thead className="table-header">
           <tr>
-            <th className="user-table-cell">Name</th>
-            <th className="user-table-cell">Email</th>
-            <th className="user-table-cell">Status</th>
+            <th className="table-cell">Name</th>
+            <th className="table-cell">Email</th>
+            <th className="table-cell">Status</th>
             {session?.user.status === "Admin" && (
               <>
-                <th className="user-table-cell">Actions</th>
+                <th className="table-cell">Actions</th>
               </>
             )}
           </tr>
         </thead>
-        <tbody className="user-table-body">
+        <tbody className="table-body">
           {users.map((user) =>
             editUser === user.id ? (
-              <tr key={user.id} className="user-table-row">
-                <td className="user-table-cell">
+              <tr key={user.id} className="table-row">
+                <td className="table-cell">
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="user-input"
+                    className="input"
                   />
                 </td>
-                <td className="user-table-cell">
+                <td className="table-cell">
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="user-input"
+                    className="input"
                   />
                 </td>
-                <td className="user-table-cell">
+                <td className="table-cell">
                   <select
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
-                    className="user-select"
+                    className="select"
                   >
                     <option value="Admin">Admin</option>
-                    <option value="Pastor">Pastor</option>
-                    <option value="Leader">Leader</option>
-                    <option value="Church_member">Church Member</option>
+                    <option value="User">User</option>
                   </select>
                 </td>
-                <td className="user-table-cell">
-                  <button
-                    onClick={handleSave}
-                    className="user-action-button save"
-                  >
+                <td className="table-cell">
+                  <button onClick={handleSave} className="action-button save">
                     Save
                   </button>
                   <button
                     onClick={() => setEditUser(null)}
-                    className="user-action-button cancel"
+                    className="action-button cancel"
                   >
                     Cancel
                   </button>
                 </td>
               </tr>
             ) : (
-              <tr key={user.id} className="user-table-row">
-                <td className="user-table-cell">{user.name}</td>
-                <td className="user-table-cell">{user.email}</td>
-                <td className="user-table-cell">{user.status}</td>
+              <tr key={user.id} className="table-row">
+                <td className="table-cell">{user.name}</td>
+                <td className="table-cell">{user.email}</td>
+                <td className="table-cell">{user.status}</td>
                 {session?.user.status === "Admin" && (
                   <>
-                    <td className="user-table-cell">
+                    <td className="table-cell">
                       <button
                         onClick={() => handleEdit(user)}
-                        className="user-action-button edit"
+                        className="action-button edit"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => openDeleteModal(user)}
-                        className="user-action-button delete"
+                        className="action-button delete"
                       >
                         Delete
                       </button>
@@ -176,6 +196,10 @@ export default function UsersTable() {
           )}
         </tbody>
       </table>
+
+      {isFormOpen && (
+        <AddUserForm onClose={closeForm} onUserAdded={handleUserAdded} />
+      )}
 
       {showModal && (
         <div className="modal-overlay">

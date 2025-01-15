@@ -58,7 +58,7 @@ export default function AddTypeForm({ onClose, onTypeAdded }) {
     <div className="form-modal">
       <div className="form-modal-content">
         <h2 className="form-title">Add Type</h2>
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
           <div>
             <label>Name</label>
             <input

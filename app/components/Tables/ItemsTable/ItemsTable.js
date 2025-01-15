@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./ItemsTable.css";
+import "./ItemsTables.css";
 import TooltipIcon from "../../TooltipIcon/TooltipIcon";
 
 export default function ItemsTable() {

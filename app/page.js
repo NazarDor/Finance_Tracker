@@ -29,7 +29,7 @@ export default function Home() {
     <section>
       <div className="dashboard">
         {menuItems.map((item, index) => (
-          <Link href={item.link} key={item.link}>
+          <Link href={item.link} key={item.link} className="dashboard-link">
             <div className="dashboard-item" key={index}>
               <div className="dashboard-icon">
                 <FontAwesomeIcon

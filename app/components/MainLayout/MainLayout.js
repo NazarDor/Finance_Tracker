@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "../Header/Header";
 import Navbar from "../Navbar/Navbar";
-import "./loading-page.css";
+import "./MainLayout.css";
 
 export default function MainLayout({ children }) {
   const { data: session, status } = useSession();

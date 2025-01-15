@@ -70,12 +70,16 @@
 
 /* Подпись элементов дашборда */
 .dashboard-label {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     font-weight: 600;
     color: #333;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: color 0.3s ease;
+}
+
+.dashboard-link{
+    text-decoration: none;
 }
 
 .dashboard-item:hover .dashboard-label {
