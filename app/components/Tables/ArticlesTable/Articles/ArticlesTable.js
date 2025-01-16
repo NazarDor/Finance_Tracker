@@ -241,7 +241,7 @@ export default function ArticlesTable() {
         />
       )}
 
-      <div className="add-btn-conteiner">
+      <div className="add-btn-conteiner-article">
         <div className="add-btn-conteiner-title">Только другие</div>
         <Switch
           checked={isOtherArticlesOnly}

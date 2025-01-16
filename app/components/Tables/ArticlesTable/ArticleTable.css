@@ -17,18 +17,12 @@
     border-radius: 20px;
 }
 
-.add-btn-conteiner {
+.add-btn-conteiner-article {
     display: flex;
     justify-content: end;
     padding: 20px;
     align-items: center;
-}
-
-.add-btn-conteiner-title {
-    font-size: 16px;
-    color: var(--color-title);
-    font-weight: 700;
-    margin: 0 20px;
+    gap: 10px;
 }
 
 .articles_container {

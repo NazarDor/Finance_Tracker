@@ -267,18 +267,6 @@ export default function ChartComponent() {
       <div className="chart-header">
         <div className="chart-title">Доход и расход</div>
         <div className="chart-buttons">
-          <div className="add-btn-conteiner-title">
-            Мои
-            <Switch
-              checked={isMyDataOnly}
-              onChange={handleMyToggleChange}
-              onColor="#86d3ff"
-              offColor="#ccc"
-              checkedIcon={false}
-              uncheckedIcon={false}
-            />
-            Все
-          </div>
           <Button
             isActive={chartType === "line"}
             buttonClicked={() => setChartType("line")}
@@ -322,7 +310,23 @@ export default function ChartComponent() {
         </div>
       </div>
 
-      <div>{renderChart()}</div>
+      <div>
+        <div className="chart-component-container">
+          <div className="add-btn-conteiner-title">
+            Мои
+            <Switch
+              checked={isMyDataOnly}
+              onChange={handleMyToggleChange}
+              onColor="#86d3ff"
+              offColor="#ccc"
+              checkedIcon={false}
+              uncheckedIcon={false}
+            />
+            Все
+          </div>
+          {renderChart()}
+        </div>
+      </div>
     </section>
   );
 }

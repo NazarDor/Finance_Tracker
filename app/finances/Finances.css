@@ -3,3 +3,11 @@
     border: 1px solid #c4c4c4;
     padding: 15px;
 }
+
+.add-btn-conteiner-title{
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: end;
+}

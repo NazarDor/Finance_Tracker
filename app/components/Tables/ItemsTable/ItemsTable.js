@@ -107,7 +107,7 @@ export default function ItemsTable() {
           <thead>
             <tr>
               <th className="table-header">
-                Тип статьи
+                Тип
                 <br />
                 <select
                   id="type-filter"
@@ -174,15 +174,12 @@ export default function ItemsTable() {
                   />
                   Все
                 </div>
-
-                <span>
-                  (
-                  {totalSum.toLocaleString("ru-RU", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                  )
-                </span>
+                (
+                {totalSum.toLocaleString("ru-RU", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+                )
               </th>
             </tr>
           </thead>

@@ -202,7 +202,7 @@ export default function CategorieTable() {
         />
       )}
 
-      <div className="add-btn-conteiner">
+      <div className="add-btn-conteiner-article">
         <div className="add-btn-conteiner-title">Доход</div>
         <Switch
           checked={isOtherCategoriesOnly}
