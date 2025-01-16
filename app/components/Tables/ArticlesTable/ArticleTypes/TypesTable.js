@@ -4,6 +4,12 @@ import "../ArticleTable.css";
 import { useSession } from "next-auth/react";
 import Button from "../../../Button/Button";
 import AddTypeForm from "../../../../components/Forms/Types/AddTypeForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faTrashCan,
+  faCirclePlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function TypesTable() {
   const [types, setTypes] = useState([]);
@@ -160,7 +166,7 @@ export default function TypesTable() {
         {session?.user.status === "Admin" && (
           <>
             <Button isActive={false} buttonClicked={openTypeForm}>
-              Добавить тип
+              <FontAwesomeIcon icon={faCirclePlus} />
             </Button>
           </>
         )}
@@ -169,7 +175,9 @@ export default function TypesTable() {
         <thead className="table-header">
           <tr>
             <th className="table-cell">Тип</th>
-            <th className="table-cell">Действие</th>
+            {session?.user.status === "Admin" && (
+              <th className="table-cell">Действие</th>
+            )}
           </tr>
         </thead>
         <tbody className="table-body">
@@ -185,35 +193,39 @@ export default function TypesTable() {
                     className="input"
                   />
                 </td>
-                <td className="table-cell">
-                  <button onClick={handleSave} className="action-button save">
-                    Save
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="action-button cancel"
-                  >
-                    Cancel
-                  </button>
-                </td>
+                {session?.user.status === "Admin" && (
+                  <td className="table-cell">
+                    <button onClick={handleSave} className="action-button save">
+                      Save
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="action-button cancel"
+                    >
+                      Cancel
+                    </button>
+                  </td>
+                )}
               </tr>
             ) : (
               <tr key={type.id} className="table-row">
                 <td className="table-cell">{type.name}</td>
-                <td className="table-cell">
-                  <button
-                    onClick={() => handleEdit(type)}
-                    className="action-button edit"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => openDeleteTypeModal(type)}
-                    className="action-button delete"
-                  >
-                    Delete
-                  </button>
-                </td>
+                {session?.user.status === "Admin" && (
+                  <td className="table-cell">
+                    <button
+                      onClick={() => handleEdit(type)}
+                      className="action-button edit"
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteTypeModal(type)}
+                      className="action-button delete"
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </button>
+                  </td>
+                )}
               </tr>
             )
           )}

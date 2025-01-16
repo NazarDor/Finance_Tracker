@@ -8,7 +8,10 @@ export async function POST(req) {
     const { name, email, password, status } = body;
 
     if (!name || !email || !password || !status) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "All fields are required" },
+        { status: 400 }
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -25,7 +28,10 @@ export async function POST(req) {
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 }
 

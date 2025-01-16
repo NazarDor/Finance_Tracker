@@ -86,6 +86,10 @@
     color: #4f545a;
 }
 
+.link{
+    text-decoration: none;
+}
+
 @media (max-width: 768px) {
     .dashboard {
         flex-direction: column;

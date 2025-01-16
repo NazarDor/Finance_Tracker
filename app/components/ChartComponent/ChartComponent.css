@@ -25,6 +25,10 @@
   width: 48%;
 }
 
+.chart-buttons{
+  display: flex;
+}
+
 @media (max-width: 768px) {
   .chart-header {
     flex-direction: column;

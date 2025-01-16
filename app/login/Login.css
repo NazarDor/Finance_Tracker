@@ -12,7 +12,7 @@
     padding: 1rem;
 }
 
-.login-image-container{
+.login-image-container {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -114,6 +114,15 @@
 .login-button:active {
     background-color: #606060;
     /* Еще светлее при нажатии */
+}
+
+.toggle-form {
+    color: #e0e0e0;
+}
+.toggle-form span:hover{
+    cursor: pointer;
+    text-decoration: underline;
+    color: #fff;
 }
 
 /* Медиа-запрос для небольших экранов */

@@ -47,6 +47,7 @@ export async function GET() {
         description: true,
         categoryId: true,
         typeId: true,
+        userId: true,
         createdAt: true,
         updatedAt: true,
       },

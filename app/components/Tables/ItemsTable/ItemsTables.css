@@ -62,11 +62,18 @@
 .table-cell {
     border: 1px solid #ddd;
     padding: 8px;
-    width: 50px;
+    max-width: 50px;
 }
 
 .tooltip {
     padding: 20px;
+}
+.add-btn-conteiner-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 150px;
+    padding: 5px;
 }
 
 @media (max-width: 768px) {
@@ -91,6 +98,8 @@
     .table-cell {
         padding: 6px;
         font-size: 0.9rem;
+        max-width: 50px;
+        width: 100%;
     }
 
     .filter-container {

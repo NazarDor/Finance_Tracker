@@ -11,7 +11,11 @@ import {
   faChartPie,
   faChartArea,
   faChartColumn,
+  faCalendarDay,
+  faCalendarDays,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
+import Switch from "react-switch";
 
 export default function ChartComponent() {
   const [chartType, setChartType] = useState("column");
@@ -47,6 +51,9 @@ export default function ChartComponent() {
       chartArea: { width: "100%", height: "70%" },
     },
   };
+  const [viewMode, setViewMode] = useState("daily");
+  const [isMyDataOnly, setIsMyDataOnly] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,67 +91,126 @@ export default function ChartComponent() {
             date: new Date(item.date),
             type,
             category,
+            userId: item.userId,
             amount: parseFloat(item.amount),
             description: item.description || "",
           };
         });
 
-        const categoriesList = [
-          ...new Set(processedData.map((item) => item.category)),
-        ];
+        const groupData = (data, mode) => {
+          if (mode === "daily") {
+            return data.map((item) => ({
+              label: item.date.toLocaleDateString("uk-UA"),
+              income: item.type === "Доход" ? item.amount : 0,
+              expense: item.type === "Расход" ? item.amount : 0,
+            }));
+          }
 
-        const updatedChartData = {
-          line: [["Дата", "Доход", "Расход"]],
-          bar: [["Дата", "Доход", "Расход"]],
-          pieIncome: [["Категорія", "Сумма"]],
-          pieExpense: [["Категорія", "Сумма"]],
-          area: [["Дата", "Доход", "Расход"]],
-          column: [["Дата", "Доход", "Расход"]],
+          if (mode === "monthly") {
+            const grouped = {};
+            data.forEach((item) => {
+              const monthLabel = item.date.toLocaleDateString("uk-UA", {
+                year: "numeric",
+                month: "long",
+              });
+              if (!grouped[monthLabel]) {
+                grouped[monthLabel] = { income: 0, expense: 0 };
+              }
+
+              if (item.type === "Доход") {
+                grouped[monthLabel].income += item.amount;
+              } else if (item.type === "Расход") {
+                grouped[monthLabel].expense += item.amount;
+              }
+            });
+
+            return Object.entries(grouped).map(
+              ([label, { income, expense }]) => ({
+                label,
+                income,
+                expense,
+              })
+            );
+          }
         };
 
-        processedData.forEach((item) => {
-          const dateLabel = new Date(item.date).toLocaleDateString("uk-UA");
-          const amount = Number(item.amount) || 0;
-          if (item.type == "Доход") {
-            updatedChartData.line.push([dateLabel, amount, 0]);
-            updatedChartData.column.push([dateLabel, amount, 0]);
-            updatedChartData.bar.push([dateLabel, amount, 0]);
-            updatedChartData.area.push([dateLabel, amount, 0]);
-          } else if (item.type == "Расход") {
-            updatedChartData.line.push([dateLabel, 0, amount]);
-            updatedChartData.column.push([dateLabel, 0, amount]);
-            updatedChartData.bar.push([dateLabel, 0, amount]);
-            updatedChartData.area.push([dateLabel, 0, amount]);
+        const updateChartData = (mode) => {
+          const filteredDate = isMyDataOnly
+            ? processedData
+            : processedData.filter((item) => item.userId === session?.user.id);
+
+          const groupedData = groupData(filteredDate, mode);
+          const updatedChartData = {
+            line: [["Дата", "Доход", "Расход"]],
+            bar: [["Дата", "Доход", "Расход"]],
+            area: [["Дата", "Доход", "Расход"]],
+            column: [["Дата", "Доход", "Расход"]],
+            pieIncome: [["Категорія", "Сумма"]],
+            pieExpense: [["Категорія", "Сумма"]],
+          };
+
+          groupedData.forEach((item) => {
+            updatedChartData.line.push([
+              item.label,
+              item.income || 0,
+              item.expense || 0,
+            ]);
+            updatedChartData.bar.push([
+              item.label,
+              item.income || 0,
+              item.expense || 0,
+            ]);
+            updatedChartData.area.push([
+              item.label,
+              item.income || 0,
+              item.expense || 0,
+            ]);
+            updatedChartData.column.push([
+              item.label,
+              item.income || 0,
+              item.expense || 0,
+            ]);
+          });
+
+          const pieIncomeData = {};
+          const pieExpenseData = {};
+
+          filteredDate.forEach((item) => {
+            if (item.type === "Доход") {
+              pieIncomeData[item.category] =
+                (pieIncomeData[item.category] || 0) + item.amount;
+            } else if (item.type === "Расход") {
+              pieExpenseData[item.category] =
+                (pieExpenseData[item.category] || 0) + item.amount;
+            }
+          });
+
+          for (const [category, sum] of Object.entries(pieIncomeData)) {
+            updatedChartData.pieIncome.push([category, sum]);
           }
-        });
+          for (const [category, sum] of Object.entries(pieExpenseData)) {
+            updatedChartData.pieExpense.push([category, sum]);
+          }
 
-        categoriesList.forEach((category) => {
-          const incomeAmount = processedData
-            .filter(
-              (item) =>
-                item.category == category && item.type == "Доход"
-            )
-            .reduce((sum, item) => sum + item.amount, 0);
+          return updatedChartData;
+        };
 
-          const expenseAmount = processedData
-            .filter(
-              (item) =>
-                item.category == category && item.type == "Расход"
-            )
-            .reduce((sum, item) => sum + item.amount, 0);
-
-          updatedChartData.pieIncome.push([category, incomeAmount]);
-          updatedChartData.pieExpense.push([category, expenseAmount]);
-        });
-
-        setChartData(updatedChartData);
+        setChartData(updateChartData(viewMode));
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [viewMode, isMyDataOnly]);
+
+  const handleToggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "daily" ? "monthly" : "daily"));
+  };
+
+  const handleMyToggleChange = () => {
+    setIsMyDataOnly((prev) => !prev);
+  };
 
   const renderChart = () => {
     if (chartType === "pie") {
@@ -158,7 +224,7 @@ export default function ChartComponent() {
               data={chartData.pieIncome}
               options={chartOptions.pie}
               width={"100%"}
-              height={"400px"}
+              height={"300px"}
             />
           </div>
           <div className="pie-chart">
@@ -169,7 +235,7 @@ export default function ChartComponent() {
               data={chartData.pieExpense}
               options={chartOptions.pie}
               width={"100%"}
-              height={"400px"}
+              height={"300px"}
             />
           </div>
         </div>
@@ -201,6 +267,18 @@ export default function ChartComponent() {
       <div className="chart-header">
         <div className="chart-title">Доход и расход</div>
         <div className="chart-buttons">
+          <div className="add-btn-conteiner-title">
+            Мои
+            <Switch
+              checked={isMyDataOnly}
+              onChange={handleMyToggleChange}
+              onColor="#86d3ff"
+              offColor="#ccc"
+              checkedIcon={false}
+              uncheckedIcon={false}
+            />
+            Все
+          </div>
           <Button
             isActive={chartType === "line"}
             buttonClicked={() => setChartType("line")}
@@ -233,6 +311,13 @@ export default function ChartComponent() {
             buttonClicked={() => setChartType("area")}
           >
             <FontAwesomeIcon icon={faChartArea} />
+          </Button>
+          <Button buttonClicked={handleToggleViewMode}>
+            {viewMode === "daily" ? (
+              <FontAwesomeIcon icon={faCalendarDays} />
+            ) : (
+              <FontAwesomeIcon icon={faCalendarDay} />
+            )}
           </Button>
         </div>
       </div>

@@ -1,15 +1,23 @@
 import { useState, useEffect } from "react";
 import "./ItemsTables.css";
 import TooltipIcon from "../../TooltipIcon/TooltipIcon";
+import Switch from "react-switch";
+import { useSession } from "next-auth/react";
 
 export default function ItemsTable() {
   const [itemsData, setItemsData] = useState([]);
   const [filters, setFilters] = useState({
-    type: "Усі",
-    month: "Усі",
-    category: "Усі",
+    type: "Все",
+    month: "Все",
+    category: "Все",
   });
   const [availableCategories, setAvailableCategories] = useState([]);
+  const [isMyItemsOnly, setIsMyItemsOnly] = useState(false);
+  const { data: session } = useSession();
+
+  const handleMyToggleChange = () => {
+    setIsMyItemsOnly((prev) => !prev);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,11 +37,12 @@ export default function ItemsTable() {
 
           return {
             date: new Date(item.date).toISOString(),
-            month: new Date(item.date).toLocaleString("uk-UA", {
+            month: new Date(item.date).toLocaleString("ru-RU", {
               month: "long",
             }),
             type,
             category,
+            userId: item.userId,
             price: parseFloat(item.amount),
             description: item.description || "",
           };
@@ -49,7 +58,7 @@ export default function ItemsTable() {
   }, []);
 
   useEffect(() => {
-    if (filters.type === "Усі") {
+    if (filters.type === "Все") {
       setAvailableCategories([
         ...new Set(itemsData.map((item) => item.category)),
       ]);
@@ -63,29 +72,33 @@ export default function ItemsTable() {
 
   const filteredData = itemsData.filter((item) => {
     return (
-      (filters.type === "Усі" || item.type === filters.type) &&
-      (filters.month === "Усі" || item.month === filters.month) &&
-      (filters.category === "Усі" || item.category === filters.category)
+      (filters.type === "Все" || item.type === filters.type) &&
+      (filters.month === "Все" || item.month === filters.month) &&
+      (filters.category === "Все" || item.category === filters.category)
     );
   });
-
-  const totalSum = filteredData.reduce((acc, item) => acc + item.price, 0);
 
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
-      ...(field === "type" ? { category: "Усі" } : {}),
+      ...(field === "type" ? { category: "Все" } : {}),
     }));
   };
 
   const formatFullDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("uk-UA", {
+    return new Date(dateString).toLocaleDateString("ru-RU", {
       day: "2-digit",
       month: "long",
       year: "numeric",
     });
   };
+
+  const filteredItems = isMyItemsOnly
+    ? filteredData
+    : filteredData.filter((item) => item.userId === session?.user.id);
+
+  const totalSum = filteredItems.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <div>
@@ -94,14 +107,14 @@ export default function ItemsTable() {
           <thead>
             <tr>
               <th className="table-header">
-                Тип статті
+                Тип статьи
                 <br />
                 <select
                   id="type-filter"
                   value={filters.type}
                   onChange={(e) => handleFilterChange("type", e.target.value)}
                 >
-                  <option value="Усі">Усі</option>
+                  <option value="Все">Все</option>
                   {[...new Set(itemsData.map((item) => item.type))].map(
                     (type) => (
                       <option key={type} value={type}>
@@ -112,14 +125,14 @@ export default function ItemsTable() {
                 </select>
               </th>
               <th className="table-header">
-                Місяць
+                Месяц
                 <br />
                 <select
                   id="month-filter"
                   value={filters.month}
                   onChange={(e) => handleFilterChange("month", e.target.value)}
                 >
-                  <option value="Усі">Усі</option>
+                  <option value="Все">Все</option>
                   {[...new Set(itemsData.map((item) => item.month))].map(
                     (month) => (
                       <option key={month} value={month}>
@@ -130,7 +143,7 @@ export default function ItemsTable() {
                 </select>
               </th>
               <th className="table-header">
-                Категорія
+                Категория
                 <br />
                 <select
                   id="category-filter"
@@ -138,9 +151,9 @@ export default function ItemsTable() {
                   onChange={(e) =>
                     handleFilterChange("category", e.target.value)
                   }
-                  disabled={filters.type === "Усі"} // Блокировка, если тип не выбран
+                  disabled={filters.type === "Все"} // Блокировка, если тип не выбран
                 >
-                  <option value="Усі">Усі</option>
+                  <option value="Все">Все</option>
                   {availableCategories.map((category) => (
                     <option key={category} value={category}>
                       {category}
@@ -149,9 +162,22 @@ export default function ItemsTable() {
                 </select>
               </th>
               <th className="table-header amount">
+                <div className="add-btn-conteiner-title">
+                  Мои
+                  <Switch
+                    checked={isMyItemsOnly}
+                    onChange={handleMyToggleChange}
+                    onColor="#86d3ff"
+                    offColor="#ccc"
+                    checkedIcon={false}
+                    uncheckedIcon={false}
+                  />
+                  Все
+                </div>
+
                 <span>
                   (
-                  {totalSum.toLocaleString("uk-UA", {
+                  {totalSum.toLocaleString("ru-RU", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
@@ -161,13 +187,13 @@ export default function ItemsTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item, index) => (
+            {filteredItems.map((item, index) => (
               <tr key={index}>
                 <td className="table-cell">{item.type}</td>
                 <td className="table-cell">{formatFullDate(item.date)}</td>
                 <td className="table-cell">{item.category}</td>
                 <td className="table-cell">
-                  {item.price.toLocaleString("uk-UA", {
+                  {item.price.toLocaleString("ru-RU", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}

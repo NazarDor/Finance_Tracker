@@ -4,6 +4,12 @@ import "./UserTable.css";
 import { useSession } from "next-auth/react";
 import AddUserForm from "../../Forms/User/AddUserForm";
 import Button from "../../Button/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faTrashCan,
+  faCirclePlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function UsersTable() {
   const [users, setUsers] = useState([]);
@@ -105,7 +111,7 @@ export default function UsersTable() {
         {session?.user.status === "Admin" && (
           <>
             <Button isActive={false} buttonClicked={openForm}>
-              Добавить пользователя
+              <FontAwesomeIcon icon={faCirclePlus} />
             </Button>
           </>
         )}
@@ -180,13 +186,13 @@ export default function UsersTable() {
                         onClick={() => handleEdit(user)}
                         className="action-button edit"
                       >
-                        Edit
+                        <FontAwesomeIcon icon={faPen} />
                       </button>
                       <button
                         onClick={() => openDeleteModal(user)}
                         className="action-button delete"
                       >
-                        Delete
+                        <FontAwesomeIcon icon={faTrashCan} />
                       </button>
                     </td>
                   </>

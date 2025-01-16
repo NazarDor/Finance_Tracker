@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import "../ArticleTable.css";
-import { useSession } from "next-auth/react";
 import Button from "../../../Button/Button";
 import AddCategoryForm from "../../../Forms/Categories/AddCategoryForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faTrashCan,
+  faCirclePlus,
+} from "@fortawesome/free-solid-svg-icons";
+import Switch from "react-switch";
 
 export default function CategorieTable() {
   const [types, setTypes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [editCategory, setEditCategory] = useState(null);
 
-  const [formData, setFormData] = useState({ name: "", typeId: "", });
+  const [formData, setFormData] = useState({ name: "", typeId: "" });
 
   const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -19,7 +25,16 @@ export default function CategorieTable() {
   const openCategoryForm = () => setIsCategoryFormOpen(true);
   const closeCategoryForm = () => setIsCategoryFormOpen(false);
 
-  const { data: session } = useSession();
+  const [isMyCategoriesOnly, setIsMyCategoriesOnly] = useState(false);
+  const [isOtherCategoriesOnly, setIsOtherCategoriesOnly] = useState(false);
+
+  const handleMyToggleChange = () => {
+    setIsMyCategoriesOnly((prev) => !prev);
+  };
+
+  const handleOtherToggleChange = () => {
+    setIsOtherCategoriesOnly((prev) => !prev);
+  };
 
   const fetchData = async () => {
     try {
@@ -45,6 +60,12 @@ export default function CategorieTable() {
     acc[type.id] = type.name;
     return acc;
   }, {});
+
+  const filteredCategories = isMyCategoriesOnly
+    ? categories.filter((categories) => typesMap[categories.typeId] !== "Доход")
+    : isOtherCategoriesOnly
+    ? categories.filter((categories) => typesMap[categories.typeId] !== "Расход")
+    : categories;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -182,13 +203,27 @@ export default function CategorieTable() {
       )}
 
       <div className="add-btn-conteiner">
-        {session?.user.status === "Admin" && (
-          <>
-            <Button isActive={false} buttonClicked={openCategoryForm}>
-              Добавить категорию
-            </Button>
-          </>
-        )}
+        <div className="add-btn-conteiner-title">Доход</div>
+        <Switch
+          checked={isOtherCategoriesOnly}
+          onChange={handleOtherToggleChange}
+          onColor="#86d3ff"
+          offColor="#ccc"
+          checkedIcon={false}
+          uncheckedIcon={false}
+        />
+        <div className="add-btn-conteiner-title">Расход</div>
+        <Switch
+          checked={isMyCategoriesOnly}
+          onChange={handleMyToggleChange}
+          onColor="#86d3ff"
+          offColor="#ccc"
+          checkedIcon={false}
+          uncheckedIcon={false}
+        />
+        <Button isActive={false} buttonClicked={openCategoryForm}>
+          <FontAwesomeIcon icon={faCirclePlus} />
+        </Button>
       </div>
       <table className="table">
         <thead className="table-header">
@@ -199,7 +234,7 @@ export default function CategorieTable() {
           </tr>
         </thead>
         <tbody className="table-body">
-          {categories.map((category) =>
+          {filteredCategories.map((category) =>
             editCategory === category.id ? (
               <tr key={category.id} className="table-row">
                 <td className="table-cell">
@@ -249,13 +284,13 @@ export default function CategorieTable() {
                     onClick={() => handleEdit(category)}
                     className="action-button edit"
                   >
-                    Edit
+                    <FontAwesomeIcon icon={faPen} />
                   </button>
                   <button
                     onClick={() => openDeleteCategoryModal(category)}
                     className="action-button delete"
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrashCan} />
                   </button>
                 </td>
               </tr>

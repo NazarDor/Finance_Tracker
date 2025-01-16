@@ -3,6 +3,7 @@ import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../../../../lib/prisma";
 import bcrypt from "bcrypt";
+// import { getPrismaClientForUser } from "../../../../lib/prisma";
 
 const handler = NextAuth({
   providers: [
@@ -23,6 +24,8 @@ const handler = NextAuth({
         if (!user) {
           throw new Error("У пользователя отсутствует доступ к сайту");
         }
+        // getPrismaClientForUser(`user_${user.id}`);
+
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password
@@ -35,6 +38,7 @@ const handler = NextAuth({
           name: user.name,
           email: user.email,
           status: user.status,
+          databaseName: `user_${user.id}`,
         };
       },
     }),
@@ -45,6 +49,7 @@ const handler = NextAuth({
       if (token) {
         session.user.id = token.id;
         session.user.status = token.status;
+        session.user.databaseName = token.databaseName;
       }
       return session;
     },
@@ -52,6 +57,7 @@ const handler = NextAuth({
       if (user) {
         token.id = user.id;
         token.status = user.status;
+        token.databaseName = user.databaseName;
       }
       return token;
     },
@@ -60,7 +66,6 @@ const handler = NextAuth({
   pages: {
     signIn: "/login",
   },
-  // secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };
