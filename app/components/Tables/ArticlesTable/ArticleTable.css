@@ -20,7 +20,7 @@
 .add-btn-conteiner-article {
     display: flex;
     justify-content: end;
-    padding: 20px;
+    padding: 10px;
     align-items: center;
     gap: 10px;
 }
@@ -184,6 +184,28 @@
     transform: translateY(-2px);
 }
 
+.add-btn-conteiner {
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    justify-content: end
+}
+
+.icon-mapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    display: flex;
+    background-color: rgb(255 255 255);
+    border: 1px solid #c4c4c4;
+    padding: 10px;
+    border-radius: 10px;
+}
+
 /* Анимация появления модального окна */
 @keyframes fadeIn {
     from {
@@ -201,6 +223,10 @@
 @media (max-width: 768px) {
     .articles {
         padding: 0;
+    }
+
+    .none {
+        display: none;
     }
 
     .table th,

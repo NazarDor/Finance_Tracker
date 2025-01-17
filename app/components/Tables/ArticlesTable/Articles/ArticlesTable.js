@@ -273,7 +273,7 @@ export default function ArticlesTable() {
             <th className="table-cell">Сумма</th>
             <th className="table-cell">Дата</th>
             <th className="table-cell descr">Описание</th>
-            <th className="table-cell">Пользователь</th>
+            <th className="table-cell none">Пользователь</th>
             <th className="table-cell">Действия</th>
           </tr>
         </thead>
@@ -343,7 +343,7 @@ export default function ArticlesTable() {
                     placeholder="Введите описание"
                   />
                 </td>
-                <td className="table-cell">{usersMap[article.userId]}</td>
+                <td className="table-cell none">{usersMap[article.userId]}</td>
                 <td className="table-cell">
                   <button onClick={handleSave} className="action-button save">
                     Сохранить
@@ -365,7 +365,7 @@ export default function ArticlesTable() {
                 <td className="table-cell">{article.amount}</td>
                 <td className="table-cell">{formatDate(article.date)}</td>
                 <td className="table-cell descr">{article.description}</td>
-                <td className="table-cell">{usersMap[article.userId]}</td>
+                <td className="table-cell none">{usersMap[article.userId]}</td>
                 {(session?.user.status === "Admin" ||
                   session?.user.id === article.userId) && (
                   <td className="table-cell">

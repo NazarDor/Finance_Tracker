@@ -10,6 +10,8 @@ import {
   faCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Switch from "react-switch";
+import IconMapper from "../../../IconMapper/IconMapper";
+import { useSession } from "next-auth/react";
 
 export default function CategorieTable() {
   const [types, setTypes] = useState([]);
@@ -25,9 +27,9 @@ export default function CategorieTable() {
   const openCategoryForm = () => setIsCategoryFormOpen(true);
   const closeCategoryForm = () => setIsCategoryFormOpen(false);
 
-  const [isMyCategoriesOnly, setIsMyCategoriesOnly] = useState(false);
-  const [isOtherCategoriesOnly, setIsOtherCategoriesOnly] = useState(false);
-
+  const [isMyCategoriesOnly, setIsMyCategoriesOnly] = useState(true);
+  const [isOtherCategoriesOnly, setIsOtherCategoriesOnly] = useState(true);
+  const { data: session } = useSession();
   const handleMyToggleChange = () => {
     setIsMyCategoriesOnly((prev) => !prev);
   };
@@ -61,11 +63,16 @@ export default function CategorieTable() {
     return acc;
   }, {});
 
-  const filteredCategories = isMyCategoriesOnly
-    ? categories.filter((categories) => typesMap[categories.typeId] !== "Доход")
-    : isOtherCategoriesOnly
-    ? categories.filter((categories) => typesMap[categories.typeId] !== "Расход")
-    : categories;
+  const filteredCategories = categories.filter((category) => {
+    if (isMyCategoriesOnly && isOtherCategoriesOnly) {
+      return true;
+    } else if (isMyCategoriesOnly) {
+      return typesMap[category.typeId] === "Расход";
+    } else if (isOtherCategoriesOnly) {
+      return typesMap[category.typeId] === "Доход";
+    }
+    return false;
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -119,10 +126,6 @@ export default function CategorieTable() {
           typeId: Number(formData.typeId),
           name: formData.name,
         }),
-        // body: JSON.stringify({
-        //   id: editCategory,
-        //   ...formData,
-        // }),
       });
 
       if (response.ok) {
@@ -230,7 +233,10 @@ export default function CategorieTable() {
           <tr>
             <th className="table-cell">Тип</th>
             <th className="table-cell">Категория</th>
-            <th className="table-cell">Действия</th>
+            <th className="table-cell">Иконка</th>
+            {session?.user.status === "Admin" && (
+              <th className="table-cell">Действия</th>
+            )}
           </tr>
         </thead>
         <tbody className="table-body">
@@ -280,19 +286,31 @@ export default function CategorieTable() {
                 <td className="table-cell">{typesMap[category.typeId]}</td>
                 <td className="table-cell">{category.name}</td>
                 <td className="table-cell">
-                  <button
-                    onClick={() => handleEdit(category)}
-                    className="action-button edit"
-                  >
-                    <FontAwesomeIcon icon={faPen} />
-                  </button>
-                  <button
-                    onClick={() => openDeleteCategoryModal(category)}
-                    className="action-button delete"
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </button>
+                  <div className="icon-mapper">
+                    <div className="icon">
+                      <IconMapper
+                        iconClass={category.iconClass}
+                        iconColor={category.iconColor}
+                      />
+                    </div>
+                  </div>
                 </td>
+                {session?.user.status === "Admin" && (
+                  <td className="table-cell">
+                    <button
+                      onClick={() => handleEdit(category)}
+                      className="action-button edit"
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteCategoryModal(category)}
+                      className="action-button delete"
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </button>
+                  </td>
+                )}
               </tr>
             )
           )}

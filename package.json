@@ -33,6 +33,7 @@
     "next-auth": "^4.24.11",
     "nextjs-toploader": "^3.7.15",
     "react": "^19.0.0",
+    "react-color": "^2.19.3",
     "react-datepicker": "^7.6.0",
     "react-dom": "^19.0.0",
     "react-google-charts": "^5.2.1",

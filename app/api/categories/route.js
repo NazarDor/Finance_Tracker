@@ -5,7 +5,7 @@ import prisma from "../../../lib/prisma";
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, typeId } = body;
+    const { name, typeId, iconClass, iconColor } = body;
 
     if (!name) {
       return NextResponse.json(
@@ -18,6 +18,8 @@ export async function POST(req) {
       data: {
         name,
         typeId,
+        iconClass,
+        iconColor,
       },
     });
 
@@ -39,6 +41,8 @@ export async function GET() {
         id: true,
         name: true,
         typeId: true,
+        iconClass: true,
+        iconColor: true,
       },
     });
     return NextResponse.json(categories);

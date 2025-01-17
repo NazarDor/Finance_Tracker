@@ -70,9 +70,9 @@ export default function AddTypeForm({ onClose, onTypeAdded }) {
             />
           </div>
           <div className="form-actions">
-            <button type="submit">Добавить тип</button>
+            <button type="submit">Добавить</button>
             <button type="button" onClick={onClose}>
-              Cancel
+              Закрыть
             </button>
           </div>
         </form>

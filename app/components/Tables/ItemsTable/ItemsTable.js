@@ -151,7 +151,7 @@ export default function ItemsTable() {
                   onChange={(e) =>
                     handleFilterChange("category", e.target.value)
                   }
-                  disabled={filters.type === "Все"} // Блокировка, если тип не выбран
+                  disabled={filters.type === "Все"}
                 >
                   <option value="Все">Все</option>
                   {availableCategories.map((category) => (

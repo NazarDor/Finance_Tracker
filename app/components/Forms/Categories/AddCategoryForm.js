@@ -3,11 +3,143 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import "../FormsStyle.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CirclePicker } from "react-color";
+import {
+  faCoffee,
+  faUser,
+  faHome,
+  faCar,
+  faShoppingCart,
+  faUtensils,
+  faDollarSign,
+  faWallet,
+  faBook,
+  faBriefcase,
+  faHeart,
+  faPlane,
+  faGlobe,
+  faMobileAlt,
+  faLaptop,
+  faBell,
+  faMusic,
+  faFilm,
+  faGamepad,
+  faTree,
+  faMountain,
+  faBicycle,
+  faBasketballBall,
+  faTools,
+  faLightbulb,
+  faCalendarAlt,
+  faCamera,
+  faTshirt,
+  faBaby,
+  faDog,
+  faGraduationCap,
+  faMapMarkerAlt,
+  faShieldAlt,
+  faRocket,
+  faHandshake,
+  faChartLine,
+  faStar,
+  faThumbsUp,
+  faBuilding,
+  faTreeCity,
+  faGift,
+  faClipboard,
+  faPaw,
+  faPhone,
+  faMedkit,
+  faAnchor,
+  faWrench,
+  faCogs,
+  faBullhorn,
+  faKey,
+  faGlasses,
+  faClipboardCheck,
+  faStethoscope,
+  faMap,
+  faCode,
+  faWifi,
+  faTruck,
+  faChartPie,
+  faSnowflake,
+  faMagic,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function AddCategoryForm({ onClose, onCategoryAdded }) {
   const [name, setName] = useState("");
   const [typeId, setTypeId] = useState("");
   const [types, setTypes] = useState([]);
+  const [icon, setIcon] = useState("");
+  const [isIconModalOpen, setIsIconModalOpen] = useState(false);
+  const [iconColor, setIconColor] = useState("#000000");
+
+  const icons = [
+    faCoffee,
+    faUser,
+    faHome,
+    faCar,
+    faShoppingCart,
+    faUtensils,
+    faDollarSign,
+    faWallet,
+    faBook,
+    faBriefcase,
+    faHeart,
+    faPlane,
+    faGlobe,
+    faMobileAlt,
+    faLaptop,
+    faBell,
+    faMusic,
+    faFilm,
+    faGamepad,
+    faTree,
+    faMountain,
+    faBicycle,
+    faBasketballBall,
+    faTools,
+    faLightbulb,
+    faCalendarAlt,
+    faCamera,
+    faTshirt,
+    faBaby,
+    faDog,
+    faGraduationCap,
+    faMapMarkerAlt,
+    faShieldAlt,
+    faRocket,
+    faHandshake,
+    faChartLine,
+    faStar,
+    faThumbsUp,
+    faBuilding,
+    faTreeCity,
+    faGift,
+    faClipboard,
+    faPaw,
+    faPhone,
+    faMedkit,
+    faAnchor,
+    faWrench,
+    faCogs,
+    faBullhorn,
+    faKey,
+    faGlasses,
+    faClipboardCheck,
+    faStethoscope,
+    faMap,
+    faCode,
+    faWifi,
+    faTruck,
+    faChartPie,
+    faSnowflake,
+    faMagic,
+    faEnvelope,
+  ];
 
   const fetchTypes = async () => {
     try {
@@ -51,7 +183,12 @@ export default function AddCategoryForm({ onClose, onCategoryAdded }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, typeId: Number(typeId) }),
+        body: JSON.stringify({
+          name,
+          typeId: Number(typeId),
+          iconClass: icon.iconName,
+          iconColor,
+        }),
       });
 
       if (response.ok) {
@@ -66,6 +203,7 @@ export default function AddCategoryForm({ onClose, onCategoryAdded }) {
         onCategoryAdded();
         setName("");
         setTypeId("");
+        setIcon("");
         onClose();
       } else {
         const error = await response.json();
@@ -97,7 +235,6 @@ export default function AddCategoryForm({ onClose, onCategoryAdded }) {
         <h2 className="form-title">Добавить категорию</h2>
         <form className="form" onSubmit={handleSubmit}>
           <div>
-            <label>Название категории</label>
             <input
               className="form-input"
               type="text"
@@ -107,24 +244,48 @@ export default function AddCategoryForm({ onClose, onCategoryAdded }) {
               required
             />
           </div>
-
-          <div>
-            <label>Тип</label>
-            <select
-              className="form-select"
-              value={typeId}
-              onChange={(e) => setTypeId(e.target.value)}
-              required
-            >
-              <option value="" disabled>
-                Выберите тип
-              </option>
-              {types.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.name}
+          <div className="form-body">
+            <div className="form-column">
+              <label>Тип</label>
+              <select
+                className="form-select"
+                value={typeId}
+                onChange={(e) => setTypeId(e.target.value)}
+                required
+              >
+                <option value="" disabled>
+                  Выберите тип
                 </option>
-              ))}
-            </select>
+                {types.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label>Icon</label>
+              <div className="icon-selection">
+                <button
+                  type="button"
+                  className="form-button"
+                  onClick={() => setIsIconModalOpen(true)}
+                >
+                  {icon ? (
+                    <FontAwesomeIcon
+                      icon={icon}
+                      style={{ color: iconColor, fontSize: "24px" }}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faHome}
+                      style={{ color: iconColor, fontSize: "24px" }}
+                    />
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="form-actions">
@@ -135,6 +296,42 @@ export default function AddCategoryForm({ onClose, onCategoryAdded }) {
           </div>
         </form>
       </div>
+
+      {/* Модальное окно для выбора иконки */}
+      {isIconModalOpen && (
+        <div className="icon-modal">
+          <div className="icon-modal-content">
+            <h3>Выберите иконку</h3>
+            <div className="icon-grid">
+              {icons.map((icon, index) => (
+                <button
+                  key={index}
+                  className="icon-button"
+                  onClick={() => {
+                    setIcon(icon); // Сохраняем выбранную иконку
+                    setIsIconModalOpen(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={icon} style={{ color: iconColor }} />
+                </button>
+              ))}
+            </div>
+            <div className="color-picker">
+              <label>Выберите цвет</label>
+              <CirclePicker
+                color={iconColor}
+                onChange={(color) => setIconColor(color.hex)} // Обновление выбранного цвета
+              />
+            </div>
+            <button
+              className="close-modal"
+              onClick={() => setIsIconModalOpen(false)}
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

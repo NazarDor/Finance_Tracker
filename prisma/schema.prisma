@@ -8,16 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
 
 // prisma/schema.prisma
-datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
-}
+// datasource db {
+//   provider  = "postgresql"
+//   url  	    = env("DATABASE_URL")
+// }
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -43,6 +43,8 @@ model Category {
   id        Int      @id @default(autoincrement())
   name      String
   typeId    Int
+  iconClass String
+  iconColor String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
