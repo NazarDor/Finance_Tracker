@@ -4,6 +4,7 @@ import "./Articles.css";
 import TypesTable from "../components/Tables/ArticlesTable/ArticleTypes/TypesTable";
 import CategorieTable from "../components/Tables/ArticlesTable/ArticleCategory/CategoriesTable";
 import ArticlesTable from "../components/Tables/ArticlesTable/Articles/ArticlesTable";
+import GlobalButtons from "../components/GlobalButtons/GlobalButtons";
 
 export default function Articles() {
   return (
@@ -11,6 +12,7 @@ export default function Articles() {
       <div className="articles">
         <div className="income_container">
           <div className="income-body">
+            <GlobalButtons />
             <div className="articles-page">
               <div className="articles-row">
                 <div className="articles-column">

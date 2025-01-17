@@ -1,0 +1,29 @@
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+.buttons-container button {
+    display: flex;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.button-icon{
+    width: 30px;
+    height: 30px;
+}
+
+.income {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.exept {
+    background-color: #f44336;
+    color: #fff;
+}

@@ -5,9 +5,13 @@ import toast from "react-hot-toast";
 import "../FormsStyle.css";
 import { useSession } from "next-auth/react";
 
-export default function AddArticleForm({ onClose, onArticleAdded }) {
+export default function AddArticleForm({
+  onClose,
+  onArticleAdded,
+  initialType,
+}) {
   const [name, setName] = useState("");
-  const [typeId, setTypeId] = useState("");
+  const [typeId, setTypeId] = useState(initialType || "");
   const [types, setTypes] = useState([]);
 
   const [amount, setAmount] = useState("");
@@ -82,6 +86,12 @@ export default function AddArticleForm({ onClose, onArticleAdded }) {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (initialType) {
+      setTypeId(initialType);
+    }
+  }, [initialType]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -141,14 +151,18 @@ export default function AddArticleForm({ onClose, onArticleAdded }) {
     }
   };
 
+  const selectedTypeName = types.find(
+    (type) => type.id === Number(typeId)
+  )?.name;
+
   return (
     <div className="form-modal">
       <div className="form-modal-content">
-        <h2 className="form-title">Добавить статью</h2>
+        <h2 className="form-title">Добавить статью - {selectedTypeName}</h2>
         <form onSubmit={handleSubmit} className="form">
           <div className="form-body">
             <div className="form-col">
-              <div>
+              <div style={{ display: initialType ? "none" : "block" }}>
                 <label className="form-label">Тип</label>
                 <select
                   className="form-select"
