@@ -11,3 +11,13 @@
     border: 1px solid #c4c4c4;
     border-radius: 20px;
 }
+
+.articles-row {
+    gap: 20px;
+}
+
+@media (max-width: 425px) {
+    .articles-row {
+        gap: 5px;
+    }
+}

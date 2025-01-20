@@ -25,7 +25,7 @@ export default function Navbar() {
   const menuItems = [
     { icon: faHome, label: "Гравная", link: "/" },
     { icon: faDollarSign, label: "Финансы", link: "/finances" },
-    { icon: faFileInvoiceDollar, label: "Статьи", link: "/articles" },
+    { icon: faFileInvoiceDollar, label: "Категории", link: "/articles" },
     { icon: faUsers, label: "Пользователи", link: "/users" },
   ];
 

@@ -3,6 +3,7 @@ import "./ItemsTables.css";
 import TooltipIcon from "../../TooltipIcon/TooltipIcon";
 import Switch from "react-switch";
 import { useSession } from "next-auth/react";
+import SummModule from "../../SummModule/SummModule";
 
 export default function ItemsTable() {
   const [itemsData, setItemsData] = useState([]);

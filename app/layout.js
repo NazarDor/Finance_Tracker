@@ -1,16 +1,15 @@
 import "./globals.css";
 import Providers from "./components/Providers";
-import MainLayout from "./components/MainLayout/MainLayout"
-import 'flowbite';
+import MainLayout from "./components/MainLayout/MainLayout";
 
 export const metadata = {
   title: "ND-Studio",
   description: "my studio",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, params }) {
   return (
-    <html lang="en">
+    <html lang={params?.locale || "en"}>
       <body>
         <Providers>
           <MainLayout>{children}</MainLayout>

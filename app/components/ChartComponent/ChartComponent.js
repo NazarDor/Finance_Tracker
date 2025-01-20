@@ -218,54 +218,67 @@ export default function ChartComponent() {
         <div className="pie-charts-container">
           <div className="pie-chart">
             <h2>Доход</h2>
-            <Chart
-              className="chart-component"
-              chartType="PieChart"
-              data={chartData.pieIncome}
-              options={chartOptions.pie}
-              width={"100%"}
-              height={"300px"}
-            />
+            {chartData.pieIncome?.length === 0 ? (
+              <div className="no-data-message">Данные отсутствуют</div>
+            ) : (
+              <Chart
+                className="chart-component"
+                chartType="PieChart"
+                data={chartData.pieIncome}
+                options={chartOptions.pie}
+                width={"100%"}
+                height={"300px"}
+              />
+            )}
           </div>
           <div className="pie-chart">
             <h2>Расход</h2>
-            <Chart
-              className="chart-component"
-              chartType="PieChart"
-              data={chartData.pieExpense}
-              options={chartOptions.pie}
-              width={"100%"}
-              height={"300px"}
-            />
+            {chartData.pieExpense?.length === 0 ? (
+              <div className="no-data-message">Данные отсутствуют</div>
+            ) : (
+              <Chart
+                className="chart-component"
+                chartType="PieChart"
+                data={chartData.pieExpense}
+                options={chartOptions.pie}
+                width={"100%"}
+                height={"300px"}
+              />
+            )}
           </div>
         </div>
       );
     }
 
     return (
-      <Chart
-        className="chart-component"
-        chartType={
-          chartType === "line"
-            ? "LineChart"
-            : chartType === "bar"
-            ? "BarChart"
-            : chartType === "area"
-            ? "AreaChart"
-            : "ColumnChart"
-        }
-        data={chartData[chartType]}
-        options={chartOptions[chartType]}
-        width={"100%"}
-        height={"400px"}
-      />
+      <>
+        {chartData[chartType]?.length === 0 ? (
+          <div className="no-data-message">Данные отсутствуют</div>
+        ) : (
+          <Chart
+            className="chart-component"
+            chartType={
+              chartType === "line"
+                ? "LineChart"
+                : chartType === "bar"
+                ? "BarChart"
+                : chartType === "area"
+                ? "AreaChart"
+                : "ColumnChart"
+            }
+            data={chartData[chartType]}
+            options={chartOptions[chartType]}
+            width={"100%"}
+            height={"400px"}
+          />
+        )}
+      </>
     );
   };
 
   return (
     <section>
       <div className="chart-header">
-        <div className="chart-title">Доход и расход</div>
         <div className="chart-buttons">
           <Button
             isActive={chartType === "line"}

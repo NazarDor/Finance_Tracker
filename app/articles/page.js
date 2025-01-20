@@ -5,30 +5,40 @@ import TypesTable from "../components/Tables/ArticlesTable/ArticleTypes/TypesTab
 import CategorieTable from "../components/Tables/ArticlesTable/ArticleCategory/CategoriesTable";
 import ArticlesTable from "../components/Tables/ArticlesTable/Articles/ArticlesTable";
 import GlobalButtons from "../components/GlobalButtons/GlobalButtons";
+import {
+  Accordion,
+  AccordionItem,
+} from "../components/AccordionItem/AccordionItem";
+import { useTranslation } from "next-i18next";
 
 export default function Articles() {
+  const { t } = useTranslation("common");
   return (
     <section>
+      {/* <div>{t("hello")}</div> */}
       <div className="articles">
         <div className="income_container">
           <div className="income-body">
             <GlobalButtons />
             <div className="articles-page">
               <div className="articles-row">
-                <div className="articles-column">
-                  <h1 className="title">Типы</h1>
-                  <TypesTable />
-                </div>
-                <div className="articles-column">
-                  <h1 className="title">Категории</h1>
-                  <CategorieTable />
-                </div>
+                <Accordion>
+                  <AccordionItem title="Типы">
+                    <TypesTable />
+                  </AccordionItem>
+                </Accordion>
+                <Accordion>
+                  <AccordionItem title="Категории">
+                    <CategorieTable />
+                  </AccordionItem>
+                </Accordion>
               </div>
               <div className="articles-row">
-                <div className="articles-column">
-                  <h1 className="title">Статьи</h1>
-                  <ArticlesTable />
-                </div>
+                <Accordion>
+                  <AccordionItem title="Статьи (расходов или доходов)">
+                    <ArticlesTable />
+                  </AccordionItem>
+                </Accordion>
               </div>
             </div>
           </div>

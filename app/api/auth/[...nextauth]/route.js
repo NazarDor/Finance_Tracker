@@ -3,7 +3,6 @@ import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../../../../lib/prisma";
 import bcrypt from "bcrypt";
-// import { getPrismaClientForUser } from "../../../../lib/prisma";
 
 const handler = NextAuth({
   providers: [
@@ -64,7 +63,7 @@ const handler = NextAuth({
   },
 
   pages: {
-    signIn: "/login",
+    signIn:  "/[locale]/login",
   },
 });
 

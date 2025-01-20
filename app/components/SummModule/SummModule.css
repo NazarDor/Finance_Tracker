@@ -1,0 +1,48 @@
+.summ-module {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.summ-module-item {
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 400px;
+    width: 100%;
+    margin: 10px;
+}
+
+.summ-module-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.summ-module-item p:first-child {
+    font-size: 1rem;
+    color: #757575;
+    margin: 0;
+    font-weight: 500;
+}
+
+.summ-module-item p:first-child {
+    font-size: 1.5rem;
+    color: #212121;
+    margin: 5px 0 0;
+    font-weight: 700;
+}
+
+@media (max-width: 710px) {
+    .summ-module{
+        flex-direction: column;
+    }
+}
